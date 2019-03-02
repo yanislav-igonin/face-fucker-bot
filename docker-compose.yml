@@ -3,5 +3,7 @@ services:
   backend:
     build:
       context: .
+    environment: 
+      - BOT_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxx
     volumes:
       - ./src:/usr/src/app/src
