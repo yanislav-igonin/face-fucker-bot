@@ -1,0 +1,17 @@
+stages:
+  - lint
+  - test
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+
+
+lint:
+  image: node:10
+  stage: lint
+  script:
+    - npm i
+    - npm run eslint
