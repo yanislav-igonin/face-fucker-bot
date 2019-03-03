@@ -4,6 +4,7 @@ services:
     build:
       context: .
     environment: 
-      - BOT_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxx
+      - BOT_TOKEN=${BOT_TOKEN}
     volumes:
       - ./src:/usr/src/app/src
+      - ./images:/usr/src/app/images
