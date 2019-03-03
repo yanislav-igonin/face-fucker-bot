@@ -1,0 +1,36 @@
+image: node:10
+
+stages:
+  - lint
+  - test
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+before_script:
+  - npm i
+
+
+
+lint:
+  stage: lint
+  script:
+    - npm run eslint
+
+
+
+test:
+  image: docker:stable
+  stage: test
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  tags:
+    - docker
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:test -f test.Dockerfile .
+    - docker run --mount type=bind,source="$(pwd)"/images,target=/usr/src/app/images \ $CI_REGISTRY_IMAGE:test
