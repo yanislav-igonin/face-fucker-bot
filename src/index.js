@@ -1,6 +1,8 @@
 const path = require('path')
-const dist = require('./dist');
+const lqr = require('./lqr');
 
-dist(path.join(__dirname, './source.jpg'))
+const uploadsDir = path.join(__dirname, '../images/uploaded')
+
+lqr(path.join(uploadsDir, './source.jpg'))
 .then(target => console.log(target))
 .catch(err => console.log(err))
