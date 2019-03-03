@@ -9,7 +9,6 @@ RUN apt-get update -y \
   && apt-get remove -y imagemagick \
   && cd /tmp \
   && curl -SLO "${MAGICK_URL}/ImageMagick-${MAGICK_VERSION}.tar.xz" \
-  && curl -SLO "${MAGICK_URL}/ImageMagick-${MAGICK_VERSION}.tar.xz.asc" \
   && tar xf "ImageMagick-${MAGICK_VERSION}.tar.xz" \
   && cd "ImageMagick-${MAGICK_VERSION}" \
   && ./configure \
