@@ -50,4 +50,4 @@ RUN apt-get update -y \
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

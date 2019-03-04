@@ -3,7 +3,9 @@ services:
   backend:
     build:
       context: .
+      dockerfile: development.Dockerfile
     environment: 
+      - NODE_ENV=development
       - BOT_TOKEN=${BOT_TOKEN}
     volumes:
       - ./src:/usr/src/app/src
