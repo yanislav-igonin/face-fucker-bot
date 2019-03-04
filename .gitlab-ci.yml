@@ -1,6 +1,6 @@
 stages:
   - lint
-  - test
+  - deploy
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -15,3 +15,24 @@ lint:
   script:
     - npm i
     - npm run eslint
+
+
+
+release:
+  image: docker:stable
+  stage: release
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  tags:
+    - docker
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -f production.Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
