@@ -1,7 +1,7 @@
 FROM node:10
 
 ENV MAGICK_URL "http://imagemagick.org/download/releases"
-ENV MAGICK_VERSION 7.0.8-29
+ENV MAGICK_VERSION 6.9.1-10
 
 RUN apt-get update -y \
   && apt-get install -y --no-install-recommends \
