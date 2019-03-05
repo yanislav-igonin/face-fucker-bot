@@ -1,24 +1,32 @@
 const { spawn } = require('child_process');
 const random = require('random-int');
+const fs = require('fs-extra');
+const path = require('path');
 
-module.exports = (sourceStream) => new Promise((resolve, reject) => {
-  const factorX = random(25, 60);
-  const factorY = random(25, 60);
+const processedDir = path.join(__dirname, '../images/processed');
 
-  const magick = spawn('convert', [
-    '-liquid-rescale',
-    `${factorX}x${factorY}%`,
-    '-resize',
-    `${10000 / factorX}x${10000 / factorY}%`,
-    '-',
-    '-',
-  ]);
+module.exports = (sourceImg) => new Promise((resolve, reject) => {
+  fs.ensureDir(processedDir)
+    .then(() => {
+      const processedImg = path.join(processedDir, path.basename(sourceImg));
 
-  sourceStream.pipe(magick.stdin);
+      const factorX = random(25, 60);
+      const factorY = random(25, 60);
 
-  magick.stderr.on('data', (data) => {
-    reject(new Error(`magick error: ${data}`));
-  });
+      const magick = spawn('convert', [
+        sourceImg,
+        '-liquid-rescale',
+        `${factorX}x${factorY}%`,
+        '-resize',
+        `${10000 / factorX}x${10000 / factorY}%`,
+        processedImg,
+      ]);
 
-  resolve(magick.stdout);
+      magick.stderr.on('data', (data) => {
+        reject(new Error(`magick error: ${data}`));
+      });
+
+      magick.on('close', () => resolve(processedImg));
+    })
+    .catch((err) => reject(err));
 });
