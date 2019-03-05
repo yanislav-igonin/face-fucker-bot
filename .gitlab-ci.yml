@@ -1,6 +1,7 @@
 stages:
   - lint
-  - test
+  - release
+  - deploy
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -15,3 +16,48 @@ lint:
   script:
     - npm i
     - npm run eslint
+
+
+
+release:
+  image: docker:stable
+  stage: release
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  tags:
+    - docker
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -f production.Dockerfile .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
+
+
+
+deploy:
+  image: ubuntu:latest
+  stage: deploy
+  variables:
+    CONTAINER_NAME: face_fucker_bot_bot
+  tags:
+    - docker
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan 142.93.230.148 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh root@142.93.230.148 "
+        docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY &&
+        docker service update --image $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CONTAINER_NAME "
+  only:
+    - master

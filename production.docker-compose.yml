@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  backend:
+  bot:
     build:
       context: .
       dockerfile: production.Dockerfile
@@ -9,3 +9,16 @@ services:
       - BOT_TOKEN=${BOT_TOKEN}
     volumes:
       - ./images:/usr/src/app/images
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 3s
+        failure_action: rollback
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        window: 10s
+      placement:
+        constraints:
+          - node.role == manager
