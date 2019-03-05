@@ -1,9 +1,7 @@
 version: '3.7'
 services:
   bot:
-    build:
-      context: .
-      dockerfile: production.Dockerfile
+    image: registry.gitlab.com/yanislav-igonin/face_fucker_bot:latest
     environment: 
       - NODE_ENV=production
       - BOT_TOKEN=${BOT_TOKEN}
