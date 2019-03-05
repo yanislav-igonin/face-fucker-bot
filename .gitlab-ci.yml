@@ -53,10 +53,10 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan 104.248.81.172 >> ~/.ssh/known_hosts
+    - ssh-keyscan 142.93.230.148 >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh root@104.248.81.172 "
+    - ssh root@142.93.230.148 "
         docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY &&
         docker service update --image $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CONTAINER_NAME "
   only:
