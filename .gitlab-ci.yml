@@ -30,8 +30,6 @@ release:
   tags:
     - docker
   script:
-    - cat /etc/hosts
-    - docker run --rm -ti alpine wget http://imagemagick.org/download/releases/ImageMagick-6.9.1-10.tar.xz
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:latest -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -f production.Dockerfile .
