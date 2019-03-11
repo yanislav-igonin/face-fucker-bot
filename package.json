@@ -17,7 +17,8 @@
     "axios": "^0.18.0",
     "fs-extra": "^7.0.1",
     "random-int": "^1.0.0",
-    "telegraf": "^3.27.1"
+    "telegraf": "^3.27.1",
+    "telegraf-mixpanel": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^5.15.0",
