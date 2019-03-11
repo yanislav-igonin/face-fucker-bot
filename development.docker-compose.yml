@@ -7,6 +7,7 @@ services:
     environment: 
       - NODE_ENV=development
       - BOT_TOKEN=${BOT_TOKEN}
+      - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
     volumes:
       - ./src:/usr/src/app/src
       - ./images:/usr/src/app/images

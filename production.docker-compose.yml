@@ -5,6 +5,7 @@ services:
     environment: 
       - NODE_ENV=production
       - BOT_TOKEN=${BOT_TOKEN}
+      - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
     volumes:
       - ./images:/usr/src/app/images
     deploy:
