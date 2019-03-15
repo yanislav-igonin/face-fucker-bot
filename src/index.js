@@ -10,6 +10,7 @@ const { BOT_TOKEN, MIXPANEL_TOKEN } = process.env;
 const bot = new Telegraf(BOT_TOKEN);
 
 const uploadsDir = path.join(__dirname, '../images/uploaded');
+const processedDir = path.join(__dirname, '../images/processed');
 
 bot.catch((err) => {
   console.error(`ERROR: ${err}\n`);
@@ -80,7 +81,12 @@ bot.on('photo', async (ctx) => {
   }
 });
 
-bot
-  .launch()
-  .then(() => console.log('bot - online'))
-  .catch((err) => console.error(`ERROR: ${err}\n`));
+Promise.all([fs.ensureDir(processedDir), fs.ensureDir(uploadsDir)])
+  .then(async () => {
+    await bot.launch();
+    console.log('bot - online');
+  })
+  .catch((err) => {
+    console.error('bot - offline');
+    console.error(`ERROR: ${err}\n`);
+  });
