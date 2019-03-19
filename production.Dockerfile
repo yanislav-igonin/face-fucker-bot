@@ -3,11 +3,10 @@ FROM node:10
 ENV MAGICK_URL "https://imagemagick.org/download/releases"
 ENV MAGICK_VERSION 6.9.1-10
 
-ARG CACHEBUST=1 
-RUN apt-get update -y \
-  && apt-get install -y --no-install-recommends \
+RUN apt update -y \
+  && apt install -y --no-install-recommends \
     libpng-dev libjpeg-dev libtiff-dev liblqr-dev \
-  && apt-get remove -y imagemagick \
+  && apt remove -y imagemagick \
   && cd /tmp \
   && curl -SLO "${MAGICK_URL}/ImageMagick-${MAGICK_VERSION}.tar.xz" \
   && curl -SLO "${MAGICK_URL}/ImageMagick-${MAGICK_VERSION}.tar.xz.asc" \
@@ -44,9 +43,13 @@ RUN apt-get update -y \
   && make \
   && make install \
   && ldconfig /usr/local/lib \
-  && apt-get -y autoclean \
-  && apt-get -y autoremove \
+  && apt -y autoclean \
+  && apt -y autoremove \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN apt update
+
+RUN apt install -y --no-install-recommends ffmpeg
   
 WORKDIR /usr/src/app
 COPY . .

@@ -2,26 +2,42 @@ const { spawn } = require('child_process');
 const random = require('random-int');
 const path = require('path');
 
-const processedDir = path.join(__dirname, '../images/processed');
+const processedDir = {
+  images: path.join(__dirname, '../uploads/images/processed'),
+  videos: path.join(__dirname, '../uploads/videos/processed'),
+};
 
-module.exports = (sourceImg) => new Promise((resolve, reject) => {
-  const processedImg = path.join(processedDir, path.basename(sourceImg));
+module.exports = (sourceImg, type) =>
+  new Promise((resolve, reject) => {
+    let processedImg;
 
-  const factorX = random(25, 60);
-  const factorY = random(25, 60);
+    switch (type) {
+      case 'image':
+        processedImg = path.join(processedDir.images, path.basename(sourceImg));
+        break;
+      case 'video':
+        processedImg = path.join(processedDir.videos, path.basename(sourceImg));
+        break;
+      default:
+        processedImg = path.join(processedDir.images, path.basename(sourceImg));
+        break;
+    }
 
-  const magick = spawn('convert', [
-    sourceImg,
-    '-liquid-rescale',
-    `${factorX}x${factorY}%`,
-    '-resize',
-    `${10000 / factorX}x${10000 / factorY}%`,
-    processedImg,
-  ]);
+    const factorX = random(25, 60);
+    const factorY = random(25, 60);
 
-  magick.stderr.on('data', (data) => {
-    reject(new Error(`magick error: ${data}`));
+    const magick = spawn('convert', [
+      sourceImg,
+      '-liquid-rescale',
+      `${factorX}x${factorY}%`,
+      '-resize',
+      `${Math.round(10000 / factorX)}x${Math.round(10000 / factorY)}%`,
+      processedImg,
+    ]);
+
+    magick.stderr.on('data', (data) => {
+      reject(new Error(`magick error: ${data}`));
+    });
+
+    magick.on('close', () => resolve(processedImg));
   });
-
-  magick.on('close', () => resolve(processedImg));
-});

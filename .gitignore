@@ -1,4 +1,3 @@
 node_modules/
-images/processed/
-images/uploaded/
+uploads/
 coverage/

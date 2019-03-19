@@ -14,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "array-flat-polyfill": "^1.0.0",
     "axios": "^0.18.0",
+    "file-size": "^1.0.0",
     "fs-extra": "^7.0.1",
     "random-int": "^1.0.0",
     "telegraf": "^3.27.1",
