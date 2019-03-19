@@ -1,7 +1,7 @@
 stages:
   - lint
   - release
-  - deploy
+  # - deploy
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -40,24 +40,24 @@ release:
 
 
 
-deploy:
-  image: ubuntu:latest
-  stage: deploy
-  variables:
-    CONTAINER_NAME: face_fucker_bot_bot
-  tags:
-    - docker
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan 142.93.230.148 >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-  script:
-    - ssh root@142.93.230.148 "
-        docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY &&
-        docker service update --with-registry-auth --image $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CONTAINER_NAME "
-  only:
-    - master
+# deploy:
+#   image: ubuntu:latest
+#   stage: deploy
+#   variables:
+#     CONTAINER_NAME: face_fucker_bot_bot
+#   tags:
+#     - docker
+#   before_script:
+#     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#     - eval $(ssh-agent -s)
+#     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - ssh-keyscan 142.93.230.148 >> ~/.ssh/known_hosts
+#     - chmod 644 ~/.ssh/known_hosts
+#   script:
+#     - ssh root@142.93.230.148 "
+#         docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY &&
+#         docker service update --with-registry-auth --image $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CONTAINER_NAME "
+#   only:
+#     - master

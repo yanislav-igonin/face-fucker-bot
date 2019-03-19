@@ -10,4 +10,4 @@ services:
       - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
     volumes:
       - ./src:/usr/src/app/src
-      - ./images:/usr/src/app/images
+      - ./uploads:/usr/src/app/uploads
