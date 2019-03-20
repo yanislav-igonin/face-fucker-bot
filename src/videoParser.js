@@ -11,8 +11,9 @@ const FRAME_QUALITY = 20; // 2 - 31 (31 is worst)
 const FRAMES_GROUP_COUNTER = 10;
 
 module.exports = (sourceVideo, ctx) =>
-  new Promise((resolve, reject) => {
-    ctx.reply('Status: Video parsing started...');
+  new Promise(async (resolve, reject) => {
+    const msgInfo = await ctx.reply('Status: Video parsing started...');
+
     const videoFramesName = path.join(videosFramesDir, path.basename(sourceVideo, '.mp4'));
 
     const videoConverterToImages = spawn('ffmpeg', [
@@ -32,12 +33,18 @@ module.exports = (sourceVideo, ctx) =>
       outputConverterToImages += c;
     });
 
-    videoConverterToImages.on('exit', (dataToImages) => {
+    videoConverterToImages.on('exit', async (dataToImages) => {
       if (dataToImages) {
         ctx.reply('Status: Compilation failed! :(');
         reject(new Error(`ffmpeg error: ${outputConverterToImages}`));
       } else {
-        ctx.reply('Status: Video frames extracted');
+        ctx.telegram.editMessageText(
+          msgInfo.chat.id,
+          msgInfo.message_id,
+          msgInfo.message_id,
+          'Status: Video frames extracted',
+        );
+
         fs.readdir(videosFramesDir, async (errToImages, filesToImages) => {
           const videoFramesList = filesToImages.filter((el) =>
             new RegExp(`${path.basename(sourceVideo, '.mp4')}-frame-[0-9]+`).test(el));
@@ -61,7 +68,12 @@ module.exports = (sourceVideo, ctx) =>
           const videoFramesFiles = [];
           let processedFrames = [];
 
-          ctx.reply('Status: Frames processing started');
+          ctx.telegram.editMessageText(
+            msgInfo.chat.id,
+            msgInfo.message_id,
+            msgInfo.message_id,
+            'Status: Frames processing started',
+          );
 
           for (const frameGroup of videoFramesGroups) {
             const asyncGroup = [];
@@ -74,16 +86,33 @@ module.exports = (sourceVideo, ctx) =>
             processedFrames.push(framesGroupData);
 
             if (Math.round(progress + groupPercentage) !== Math.round(progress)) {
-              ctx.reply(`Status: ${Math.round(progress + groupPercentage)}% frames processed`);
+              ctx.telegram.editMessageText(
+                msgInfo.chat.id,
+                msgInfo.message_id,
+                msgInfo.message_id,
+                `Status: ${Math.round(progress + groupPercentage)}% frames processed`,
+              );
             }
             progress += groupPercentage;
           }
 
           processedFrames = processedFrames.flat();
-          ctx.reply('Status: Frames fucking completed');
+
+          ctx.telegram.editMessageText(
+            msgInfo.chat.id,
+            msgInfo.message_id,
+            msgInfo.message_id,
+            'Status: Frames fucking completed',
+          );
 
           await Promise.all(videoFramesFiles.map((videoFramesFile) => fs.unlink(videoFramesFile)));
-          ctx.reply('Status: Source frames cleared');
+
+          ctx.telegram.editMessageText(
+            msgInfo.chat.id,
+            msgInfo.message_id,
+            msgInfo.message_id,
+            'Status: Source frames cleared',
+          );
 
           const processedVideoFramesName = path.join(
             videosProcessedDir,
@@ -109,11 +138,22 @@ module.exports = (sourceVideo, ctx) =>
             outputConverterToVideo += c;
           });
 
-          ctx.reply('Status: Video compilation started');
+          ctx.telegram.editMessageText(
+            msgInfo.chat.id,
+            msgInfo.message_id,
+            msgInfo.message_id,
+            'Status: Video compilation started',
+          );
 
           videoConverterToVideo.on('exit', (dataToVideo) => {
             if (dataToVideo) {
-              ctx.reply('Status: Compilation failed! :(');
+              ctx.telegram.editMessageText(
+                msgInfo.chat.id,
+                msgInfo.message_id,
+                msgInfo.message_id,
+                'Status: Video compilation started',
+              );
+
               reject(new Error(`ffmpeg error: ${outputConverterToVideo}`));
             } else {
               fs.readdir(videosProcessedDir, async (errToVideo, filesToVideo) => {
@@ -131,12 +171,24 @@ module.exports = (sourceVideo, ctx) =>
                   new RegExp(`${path.basename(sourceVideo, '.mp4')}-processed-video+`).test(el));
 
                 if (!fuckedVideo[0]) {
-                  ctx.reply('Status: Compilation failed! :(');
+                  ctx.telegram.editMessageText(
+                    msgInfo.chat.id,
+                    msgInfo.message_id,
+                    msgInfo.message_id,
+                    'Status: Compilation failed! :(',
+                  );
+
                   throw new Error("Proccessed video doesn't exist!");
                 }
 
                 resolve(path.join(videosProcessedDir, fuckedVideo[0]));
-                ctx.reply('Status: Video compilation finished!');
+
+                ctx.telegram.editMessageText(
+                  msgInfo.chat.id,
+                  msgInfo.message_id,
+                  msgInfo.message_id,
+                  'Status: Video compilation finished!',
+                );
               });
             }
           });

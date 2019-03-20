@@ -6,6 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const fs = require('fs-extra');
 const filesize = require('file-size');
+
 const lqr = require('./lqr');
 const videoParser = require('./videoParser');
 const UserError = require('./userError');
