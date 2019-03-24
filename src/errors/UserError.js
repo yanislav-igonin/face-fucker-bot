@@ -5,7 +5,7 @@ class UserError extends Error {
       Error.captureStackTrace(this, UserError);
     }
 
-    this.forUser = true;
+    this.isUserError = true;
     this.date = new Date();
   }
 }
