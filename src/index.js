@@ -191,6 +191,32 @@ bot.on('video_note', async (ctx) => {
   });
 });
 
+bot.on('animation', async (ctx) => {
+  if (MIXPANEL_TOKEN !== '') {
+    ctx.mixpanel.track('animation_uploaded');
+    ctx.mixpanel.people.set({
+      $created: new Date().toISOString(),
+    });
+  }
+
+  await unifiedVideoHandler(ctx, ctx.update.message.animation, async (videoInfo) => {
+    const sourceVideo = path.join(
+      FOLDERS.VIDEO_UPLOADS,
+      `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+    );
+    const processedVideo = await videoParser(sourceVideo, ctx);
+    await ctx.replyWithVideo({ source: processedVideo });
+    await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+
+    if (MIXPANEL_TOKEN !== '') {
+      ctx.mixpanel.track('animation_processed');
+      ctx.mixpanel.people.set({
+        $created: new Date().toISOString(),
+      });
+    }
+  });
+});
+
 Promise.all([
   fs.ensureDir(FOLDERS.IMAGE_PROCESSED),
   fs.ensureDir(FOLDERS.IMAGE_UPLOADS),
