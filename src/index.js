@@ -7,22 +7,20 @@ const axios = require('axios');
 const fs = require('fs-extra');
 const filesize = require('file-size');
 
-const lqr = require('./lqr');
-const videoParser = require('./videoParser');
-const UserError = require('./userError');
+const imageParser = require('./modules/imageParser');
+const videoParser = require('./modules/videoParser');
+const { UserError } = require('./errors');
+const errorHandler = require('./middlewares/errorHandler');
+
+const {
+  DATA_TYPE,
+  FOLDERS,
+  ERRORS: { DEFAULT_USER_ERROR_MESSAGE },
+} = require('./config');
 
 const { BOT_TOKEN, MIXPANEL_TOKEN = '' } = process.env;
 
 const bot = new Telegraf(BOT_TOKEN);
-
-const imagesUploadsDir = path.join(__dirname, '../uploads/images/uploaded');
-const imagesProcessedDir = path.join(__dirname, '../uploads/images/processed');
-
-const videosUploadsDir = path.join(__dirname, '../uploads/videos/uploaded');
-const videosFramesDir = path.join(__dirname, '../uploads/videos/videoFrames');
-const videosProcessedDir = path.join(__dirname, '../uploads/videos/processed');
-
-const DEFAULT_USER_ERROR_MESSAGE = 'Something went wrong, please try again.';
 
 bot.catch((err) => {
   console.error(`ERROR: ${err}\n`);
@@ -32,6 +30,8 @@ if (MIXPANEL_TOKEN !== '') {
   const mixpanel = new TelegrafMixpanel(MIXPANEL_TOKEN);
   bot.use(mixpanel.middleware());
 }
+
+bot.use(errorHandler);
 
 bot.start((ctx) => {
   if (MIXPANEL_TOKEN !== '') {
@@ -61,7 +61,7 @@ bot.on('photo', async (ctx) => {
     const photoLink = await ctx.telegram.getFileLink(photoInfo.file_id);
 
     const writer = await fs.createWriteStream(
-      path.join(imagesUploadsDir, path.basename(photoInfo.file_path)),
+      path.join(FOLDERS.IMAGE_UPLOADS, path.basename(photoInfo.file_path)),
     );
 
     const response = await axios({
@@ -73,8 +73,8 @@ bot.on('photo', async (ctx) => {
     response.data.pipe(writer);
 
     response.data.on('end', async () => {
-      const sourceImage = path.join(imagesUploadsDir, path.basename(photoInfo.file_path));
-      const processedImage = await lqr(sourceImage, 'image');
+      const sourceImage = path.join(FOLDERS.IMAGE_UPLOADS, path.basename(photoInfo.file_path));
+      const processedImage = await imageParser(sourceImage, DATA_TYPE.IMAGE);
       await ctx.replyWithPhoto({ source: processedImage });
       await Promise.all([fs.unlink(sourceImage), fs.unlink(processedImage)]);
 
@@ -90,21 +90,13 @@ bot.on('photo', async (ctx) => {
       throw new Error(err);
     });
   } catch (err) {
-    console.error(`ERROR: ${err}\n`);
-    ctx.reply(DEFAULT_USER_ERROR_MESSAGE);
+    throw new Error(DEFAULT_USER_ERROR_MESSAGE);
   }
 });
 
-bot.on('video', async (ctx) => {
-  if (MIXPANEL_TOKEN !== '') {
-    ctx.mixpanel.track('video_uploaded');
-    ctx.mixpanel.people.set({
-      $created: new Date().toISOString(),
-    });
-  }
-
+const unifiedVideoHandler = async (ctx, videoData, onSuccess) => {
   try {
-    const { file_id, file_size } = ctx.update.message.video;
+    const { file_id, file_size } = videoData;
     if (filesize(file_size).to('MB') > 20) {
       throw new UserError(
         `File size must be less than 20MB. Your uploaded file size is ${filesize(file_size).human(
@@ -116,7 +108,7 @@ bot.on('video', async (ctx) => {
     const videoLink = await ctx.telegram.getFileLink(videoInfo.file_id);
 
     const writer = await fs.createWriteStream(
-      path.join(videosUploadsDir, path.basename(videoInfo.file_path)),
+      path.join(FOLDERS.VIDEO_UPLOADS, path.basename(videoInfo.file_path)),
     );
 
     const response = await axios({
@@ -127,33 +119,37 @@ bot.on('video', async (ctx) => {
 
     response.data.pipe(writer);
 
-    response.data.on('end', async () => {
-      const sourceVideo = path.join(videosUploadsDir, path.basename(videoInfo.file_path));
-      const processedVideo = await videoParser(sourceVideo, ctx);
-      await ctx.replyWithVideo({ source: processedVideo });
-      await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
-
-      if (MIXPANEL_TOKEN !== '') {
-        ctx.mixpanel.track('video_processed');
-        ctx.mixpanel.people.set({
-          $created: new Date().toISOString(),
-        });
-      }
-    });
+    response.data.on('end', onSuccess.bind(this, videoInfo));
 
     response.data.on('error', (err) => {
       throw new Error(err);
     });
   } catch (err) {
-    let errorMessage = err;
-    let messageToUser = DEFAULT_USER_ERROR_MESSAGE;
-    if (err.forUser) {
-      errorMessage = err.message;
-      messageToUser = err.message;
-    }
-    console.error(`ERROR: ${errorMessage}\n`);
-    ctx.reply(messageToUser);
+    throw new Error(`ERROR: ${err.messsage}\n`);
   }
+};
+
+bot.on('video', async (ctx) => {
+  if (MIXPANEL_TOKEN !== '') {
+    ctx.mixpanel.track('video_uploaded');
+    ctx.mixpanel.people.set({
+      $created: new Date().toISOString(),
+    });
+  }
+
+  await unifiedVideoHandler(ctx, ctx.update.message.video, async (videoInfo) => {
+    const sourceVideo = path.join(FOLDERS.VIDEO_UPLOADS, path.basename(videoInfo.file_path));
+    const processedVideo = await videoParser(sourceVideo, ctx);
+    await ctx.replyWithVideo({ source: processedVideo });
+    await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+
+    if (MIXPANEL_TOKEN !== '') {
+      ctx.mixpanel.track('video_processed');
+      ctx.mixpanel.people.set({
+        $created: new Date().toISOString(),
+      });
+    }
+  });
 });
 
 bot.on('video_note', async (ctx) => {
@@ -164,65 +160,27 @@ bot.on('video_note', async (ctx) => {
     });
   }
 
-  try {
-    const { file_id, file_size } = ctx.update.message.video_note;
-    if (filesize(file_size).to('MB') > 20) {
-      throw new UserError(
-        `File size must be less than 20MB. Your uploaded file size is ${filesize(file_size).human(
-          'si',
-        )}`,
-      );
+  await unifiedVideoHandler(ctx, ctx.update.message.video_note, async (videoInfo) => {
+    const sourceVideo = path.join(FOLDERS.VIDEO_UPLOADS, path.basename(videoInfo.file_path));
+    const processedVideo = await videoParser(sourceVideo, ctx);
+    await ctx.replyWithVideoNote({ source: processedVideo });
+    await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+
+    if (MIXPANEL_TOKEN !== '') {
+      ctx.mixpanel.track('video_note_processed');
+      ctx.mixpanel.people.set({
+        $created: new Date().toISOString(),
+      });
     }
-    const videoInfo = await ctx.telegram.getFile(file_id);
-    const videoLink = await ctx.telegram.getFileLink(videoInfo.file_id);
-
-    const writer = await fs.createWriteStream(
-      path.join(videosUploadsDir, path.basename(videoInfo.file_path)),
-    );
-
-    const response = await axios({
-      url: videoLink,
-      method: 'GET',
-      responseType: 'stream',
-    });
-
-    response.data.pipe(writer);
-
-    response.data.on('end', async () => {
-      const sourceVideo = path.join(videosUploadsDir, path.basename(videoInfo.file_path));
-      const processedVideo = await videoParser(sourceVideo, ctx);
-      await ctx.replyWithVideoNote({ source: processedVideo });
-      await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
-
-      if (MIXPANEL_TOKEN !== '') {
-        ctx.mixpanel.track('video_note_processed');
-        ctx.mixpanel.people.set({
-          $created: new Date().toISOString(),
-        });
-      }
-    });
-
-    response.data.on('error', (err) => {
-      throw new Error(err);
-    });
-  } catch (err) {
-    let errorMessage = err;
-    let messageToUser = DEFAULT_USER_ERROR_MESSAGE;
-    if (err.forUser) {
-      errorMessage = err.message;
-      messageToUser = err.message;
-    }
-    console.error(`ERROR: ${errorMessage}\n`);
-    ctx.reply(messageToUser);
-  }
+  });
 });
 
 Promise.all([
-  fs.ensureDir(imagesProcessedDir),
-  fs.ensureDir(imagesUploadsDir),
-  fs.ensureDir(videosUploadsDir),
-  fs.ensureDir(videosFramesDir),
-  fs.ensureDir(videosProcessedDir),
+  fs.ensureDir(FOLDERS.IMAGE_PROCESSED),
+  fs.ensureDir(FOLDERS.IMAGE_UPLOADS),
+  fs.ensureDir(FOLDERS.VIDEO_UPLOADS),
+  fs.ensureDir(FOLDERS.VIDEO_FRAMES),
+  fs.ensureDir(FOLDERS.VIDEO_PROCESSED),
 ])
   .then(async () => {
     await bot.launch();

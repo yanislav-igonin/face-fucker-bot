@@ -1,1 +1,0 @@
-declare function lqr(sourceImg: string, type: string): Promise<string>;
