@@ -6,6 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const fs = require('fs-extra');
 const filesize = require('file-size');
+const nanoid = require('nanoid');
 
 const imageParser = require('./modules/imageParser');
 const videoParser = require('./modules/videoParser');
@@ -60,8 +61,10 @@ bot.on('photo', async (ctx) => {
     );
     const photoLink = await ctx.telegram.getFileLink(photoInfo.file_id);
 
+    const uniqueId = nanoid();
+
     const writer = await fs.createWriteStream(
-      path.join(FOLDERS.IMAGE_UPLOADS, path.basename(photoInfo.file_path)),
+      path.join(FOLDERS.IMAGE_UPLOADS, `${uniqueId}-${path.basename(photoInfo.file_path)}`),
     );
 
     const response = await axios({
@@ -73,7 +76,10 @@ bot.on('photo', async (ctx) => {
     response.data.pipe(writer);
 
     response.data.on('end', async () => {
-      const sourceImage = path.join(FOLDERS.IMAGE_UPLOADS, path.basename(photoInfo.file_path));
+      const sourceImage = path.join(
+        FOLDERS.IMAGE_UPLOADS,
+        `${uniqueId}-${path.basename(photoInfo.file_path)}`,
+      );
       const processedImage = await imageParser(sourceImage, DATA_TYPE.IMAGE);
       await ctx.replyWithPhoto({ source: processedImage });
       await Promise.all([fs.unlink(sourceImage), fs.unlink(processedImage)]);
@@ -105,10 +111,14 @@ const unifiedVideoHandler = async (ctx, videoData, onSuccess) => {
       );
     }
     const videoInfo = await ctx.telegram.getFile(file_id);
+    videoInfo.unique_id = nanoid();
     const videoLink = await ctx.telegram.getFileLink(videoInfo.file_id);
 
     const writer = await fs.createWriteStream(
-      path.join(FOLDERS.VIDEO_UPLOADS, path.basename(videoInfo.file_path)),
+      path.join(
+        FOLDERS.VIDEO_UPLOADS,
+        `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+      ),
     );
 
     const response = await axios({
@@ -138,7 +148,10 @@ bot.on('video', async (ctx) => {
   }
 
   await unifiedVideoHandler(ctx, ctx.update.message.video, async (videoInfo) => {
-    const sourceVideo = path.join(FOLDERS.VIDEO_UPLOADS, path.basename(videoInfo.file_path));
+    const sourceVideo = path.join(
+      FOLDERS.VIDEO_UPLOADS,
+      `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+    );
     const processedVideo = await videoParser(sourceVideo, ctx);
     await ctx.replyWithVideo({ source: processedVideo });
     await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
@@ -161,7 +174,10 @@ bot.on('video_note', async (ctx) => {
   }
 
   await unifiedVideoHandler(ctx, ctx.update.message.video_note, async (videoInfo) => {
-    const sourceVideo = path.join(FOLDERS.VIDEO_UPLOADS, path.basename(videoInfo.file_path));
+    const sourceVideo = path.join(
+      FOLDERS.VIDEO_UPLOADS,
+      `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+    );
     const processedVideo = await videoParser(sourceVideo, ctx);
     await ctx.replyWithVideoNote({ source: processedVideo });
     await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
