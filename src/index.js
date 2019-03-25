@@ -8,13 +8,13 @@ const fs = require('fs-extra');
 const filesize = require('file-size');
 const nanoid = require('nanoid');
 
-const imageParser = require('./modules/imageParser');
+const Rabbit = require('./modules/rabbitmq');
 const videoParser = require('./modules/videoParser');
 const { UserError } = require('./errors');
 const errorHandler = require('./middlewares/errorHandler');
+const unifiedHanlder = require('./modules/unifiedHanlder');
 
 const {
-  DATA_TYPE,
   FOLDERS,
   ERRORS: { DEFAULT_USER_ERROR_MESSAGE },
 } = require('./config');
@@ -22,6 +22,7 @@ const {
 const { BOT_TOKEN, MIXPANEL_TOKEN = '' } = process.env;
 
 const bot = new Telegraf(BOT_TOKEN);
+const rabbit = new Rabbit(process.env.RABBIT_URL);
 
 bot.catch((err) => {
   console.error(`ERROR: ${err}\n`);
@@ -59,6 +60,7 @@ bot.on('photo', async (ctx) => {
     const photoInfo = await ctx.telegram.getFile(
       ctx.update.message.photo[ctx.update.message.photo.length - 1].file_id,
     );
+
     const photoLink = await ctx.telegram.getFileLink(photoInfo.file_id);
 
     const uniqueId = nanoid();
@@ -80,9 +82,8 @@ bot.on('photo', async (ctx) => {
         FOLDERS.IMAGE_UPLOADS,
         `${uniqueId}-${path.basename(photoInfo.file_path)}`,
       );
-      const processedImage = await imageParser(sourceImage, DATA_TYPE.IMAGE);
-      await ctx.replyWithPhoto({ source: processedImage });
-      await Promise.all([fs.unlink(sourceImage), fs.unlink(processedImage)]);
+
+      rabbit.publish({ type: 'photo', sourceImage, chatId: ctx.update.message.chat.id });
 
       if (MIXPANEL_TOKEN !== '') {
         ctx.mixpanel.track('photo_processed');
@@ -225,8 +226,11 @@ Promise.all([
   fs.ensureDir(FOLDERS.VIDEO_PROCESSED),
 ])
   .then(async () => {
+    await rabbit.connect();
+    console.log('rabbitmq - connection - success');
     await bot.launch();
     console.log('bot - online');
+    rabbit.consume(unifiedHanlder);
   })
   .catch((err) => {
     console.error('bot - offline');

@@ -6,6 +6,7 @@ services:
       - NODE_ENV=production
       - BOT_TOKEN=${BOT_TOKEN}
       - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
+      - RABBIT_URL=${RABBIT_URL}
     deploy:
       replicas: 1
       update_config:

@@ -9,6 +9,12 @@ services:
       - REDIS_HOST=redis
       - BOT_TOKEN=${BOT_TOKEN}
       - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
+      - RABBIT_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
     volumes:
       - ./src:/usr/src/app/src
       - ./uploads:/usr/src/app/uploads
+
+  rabbitmq:
+    image: rabbitmq:alpine
