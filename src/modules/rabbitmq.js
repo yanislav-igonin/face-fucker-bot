@@ -8,24 +8,30 @@ class Rabbit {
     this.connection = null;
   }
 
+  /* eslint-disable-next-line consistent-return */
   async connect() {
-    this.connection = await amqplib.connect(
-      this.connectionUrl || 'amqp://localhost:5672',
-      this.options,
-    );
+    try {
+      this.connection = await amqplib.connect(
+        this.connectionUrl || 'amqp://localhost:5672',
+        this.options,
+      );
+    } catch (err) {
+      console.error('RabbitMQ: Connection error');
+      return this.connect();
+    }
 
     this.connection.on('error', async () => {
       this.connection.close().catch(console.error);
 
       console.error('RabbitMQ: Connection error');
       this.connection = null;
-      this.connect().catch(console.error);
+      return this.connect();
     });
 
     this.connection.on('close', () => {
       console.error('RabbitMQ: Connection close');
       this.connection = null;
-      this.connect().catch(console.error);
+      return this.connect();
     });
   }
 
