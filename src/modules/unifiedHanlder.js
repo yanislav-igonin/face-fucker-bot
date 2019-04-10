@@ -1,9 +1,7 @@
 const fs = require('fs-extra');
-const Telegram = require('telegraf/telegram');
 
+const telegram = require('./telegram');
 const imageParser = require('./imageParser');
-
-const telegram = new Telegram(process.env.BOT_TOKEN);
 
 const unifiedHanlder = async (data) => {
   switch (data.type) {
