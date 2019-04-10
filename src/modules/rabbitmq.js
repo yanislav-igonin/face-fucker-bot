@@ -6,6 +6,7 @@ class Rabbit {
     this.queueName = 'image_processing';
     this.options = options;
     this.connection = null;
+    this.channels = [];
   }
 
   /* eslint-disable-next-line consistent-return */
@@ -40,12 +41,23 @@ class Rabbit {
       await this.connect();
     }
 
-    const channel = await this.connection.createChannel();
+    if (this.channels.length === 0) {
+      for (let i = 0; i < 10; i += 1) {
+        this.channels.push(await this.connection.createChannel());
+        this.channels[i].assertQueue(this.queueName, { durable: true });
+        this.channels[i].prefetch(10);
 
-    channel.assertQueue(this.queueName, { durable: true });
-    channel.prefetch(10);
+        this.channels[i].on('error', async () => {
+          this.channels[i].close().catch(console.error);
+        });
 
-    return channel;
+        this.channels[i].on('close', async () => {
+          console.error('RabbitMQ: Channel close');
+        });
+      }
+    }
+
+    return this.channels[Math.floor(Math.random() * this.channels.length)];
   }
 
   async consume(onMessage) {
