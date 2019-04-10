@@ -101,44 +101,47 @@ bot.on('photo', async (ctx) => {
   }
 });
 
-const unifiedVideoHandler = async (ctx, videoData, onSuccess) => {
-  try {
-    const { file_id, file_size } = videoData;
-    if (filesize(file_size).to('MB') > 20) {
-      throw new UserError(
-        `File size must be less than 20MB. Your uploaded file size is ${filesize(file_size).human(
-          'si',
-        )}`,
+const unifiedVideoHandler = (ctx, videoData) =>
+  new Promise(async (resolve) => {
+    try {
+      const { file_id, file_size } = videoData;
+      if (filesize(file_size).to('MB') > 20) {
+        throw new UserError(
+          `File size must be less than 20MB. Your uploaded file size is ${filesize(file_size).human(
+            'si',
+          )}`,
+        );
+      }
+      const videoInfo = await ctx.telegram.getFile(file_id);
+      videoInfo.unique_id = nanoid();
+      const videoLink = await ctx.telegram.getFileLink(videoInfo.file_id);
+
+      const writer = await fs.createWriteStream(
+        path.join(
+          FOLDERS.VIDEO_UPLOADS,
+          `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+        ),
       );
+
+      const response = await axios({
+        url: videoLink,
+        method: 'GET',
+        responseType: 'stream',
+      });
+
+      response.data.pipe(writer);
+
+      response.data.on('end', () => {
+        resolve(videoInfo);
+      });
+
+      response.data.on('error', (err) => {
+        throw new Error(err);
+      });
+    } catch (err) {
+      throw new Error(`ERROR: ${err.messsage}\n`);
     }
-    const videoInfo = await ctx.telegram.getFile(file_id);
-    videoInfo.unique_id = nanoid();
-    const videoLink = await ctx.telegram.getFileLink(videoInfo.file_id);
-
-    const writer = await fs.createWriteStream(
-      path.join(
-        FOLDERS.VIDEO_UPLOADS,
-        `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
-      ),
-    );
-
-    const response = await axios({
-      url: videoLink,
-      method: 'GET',
-      responseType: 'stream',
-    });
-
-    response.data.pipe(writer);
-
-    response.data.on('end', onSuccess.bind(this, videoInfo));
-
-    response.data.on('error', (err) => {
-      throw new Error(err);
-    });
-  } catch (err) {
-    throw new Error(`ERROR: ${err.messsage}\n`);
-  }
-};
+  });
 
 bot.on('video', async (ctx) => {
   if (MIXPANEL_TOKEN !== '') {
@@ -148,22 +151,21 @@ bot.on('video', async (ctx) => {
     });
   }
 
-  await unifiedVideoHandler(ctx, ctx.update.message.video, async (videoInfo) => {
-    const sourceVideo = path.join(
-      FOLDERS.VIDEO_UPLOADS,
-      `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
-    );
-    const processedVideo = await videoParser(sourceVideo, ctx);
-    await ctx.replyWithVideo({ source: processedVideo });
-    await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+  const videoInfo = await unifiedVideoHandler(ctx, ctx.update.message.video);
+  const sourceVideo = path.join(
+    FOLDERS.VIDEO_UPLOADS,
+    `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+  );
+  const processedVideo = await videoParser(sourceVideo, ctx);
+  await ctx.replyWithVideo({ source: processedVideo });
+  await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
 
-    if (MIXPANEL_TOKEN !== '') {
-      ctx.mixpanel.track('video_processed');
-      ctx.mixpanel.people.set({
-        $created: new Date().toISOString(),
-      });
-    }
-  });
+  if (MIXPANEL_TOKEN !== '') {
+    ctx.mixpanel.track('video_processed');
+    ctx.mixpanel.people.set({
+      $created: new Date().toISOString(),
+    });
+  }
 });
 
 bot.on('video_note', async (ctx) => {
@@ -174,22 +176,21 @@ bot.on('video_note', async (ctx) => {
     });
   }
 
-  await unifiedVideoHandler(ctx, ctx.update.message.video_note, async (videoInfo) => {
-    const sourceVideo = path.join(
-      FOLDERS.VIDEO_UPLOADS,
-      `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
-    );
-    const processedVideo = await videoParser(sourceVideo, ctx);
-    await ctx.replyWithVideoNote({ source: processedVideo });
-    await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+  const videoInfo = await unifiedVideoHandler(ctx, ctx.update.message.video_note);
+  const sourceVideo = path.join(
+    FOLDERS.VIDEO_UPLOADS,
+    `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+  );
+  const processedVideo = await videoParser(sourceVideo, ctx);
+  await ctx.replyWithVideoNote({ source: processedVideo });
+  await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
 
-    if (MIXPANEL_TOKEN !== '') {
-      ctx.mixpanel.track('video_note_processed');
-      ctx.mixpanel.people.set({
-        $created: new Date().toISOString(),
-      });
-    }
-  });
+  if (MIXPANEL_TOKEN !== '') {
+    ctx.mixpanel.track('video_note_processed');
+    ctx.mixpanel.people.set({
+      $created: new Date().toISOString(),
+    });
+  }
 });
 
 bot.on('animation', async (ctx) => {
@@ -200,22 +201,21 @@ bot.on('animation', async (ctx) => {
     });
   }
 
-  await unifiedVideoHandler(ctx, ctx.update.message.animation, async (videoInfo) => {
-    const sourceVideo = path.join(
-      FOLDERS.VIDEO_UPLOADS,
-      `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
-    );
-    const processedVideo = await videoParser(sourceVideo, ctx);
-    await ctx.replyWithVideo({ source: processedVideo });
-    await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+  const videoInfo = await unifiedVideoHandler(ctx, ctx.update.message.animation);
+  const sourceVideo = path.join(
+    FOLDERS.VIDEO_UPLOADS,
+    `${videoInfo.unique_id}-${path.basename(videoInfo.file_path)}`,
+  );
+  const processedVideo = await videoParser(sourceVideo, ctx);
+  await ctx.replyWithVideo({ source: processedVideo });
+  await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
 
-    if (MIXPANEL_TOKEN !== '') {
-      ctx.mixpanel.track('animation_processed');
-      ctx.mixpanel.people.set({
-        $created: new Date().toISOString(),
-      });
-    }
-  });
+  if (MIXPANEL_TOKEN !== '') {
+    ctx.mixpanel.track('animation_processed');
+    ctx.mixpanel.people.set({
+      $created: new Date().toISOString(),
+    });
+  }
 });
 
 Promise.all([
