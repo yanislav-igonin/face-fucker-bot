@@ -14,8 +14,11 @@ const { UserError } = require('./errors');
 const errorHandler = require('./middlewares/errorHandler');
 const unifiedHanlder = require('./modules/unifiedHanlder');
 
+const fileLoader = require('./modules/fileLoader');
+
 const {
   FOLDERS,
+  DATA_TYPE,
   ERRORS: { DEFAULT_USER_ERROR_MESSAGE },
 } = require('./config');
 
@@ -57,45 +60,19 @@ bot.on('photo', async (ctx) => {
   }
 
   try {
-    const photoInfo = await ctx.telegram.getFile(
+    const sourceImage = await fileLoader(
       ctx.update.message.photo[ctx.update.message.photo.length - 1].file_id,
+      DATA_TYPE.IMAGE,
     );
 
-    const photoLink = await ctx.telegram.getFileLink(photoInfo.file_id);
+    rabbit.publish({ type: DATA_TYPE.IMAGE, sourceImage, chatId: ctx.update.message.chat.id });
 
-    const uniqueId = nanoid();
-
-    const writer = await fs.createWriteStream(
-      path.join(FOLDERS.IMAGE_UPLOADS, `${uniqueId}-${path.basename(photoInfo.file_path)}`),
-    );
-
-    const response = await axios({
-      url: photoLink,
-      method: 'GET',
-      responseType: 'stream',
-    });
-
-    response.data.pipe(writer);
-
-    response.data.on('end', async () => {
-      const sourceImage = path.join(
-        FOLDERS.IMAGE_UPLOADS,
-        `${uniqueId}-${path.basename(photoInfo.file_path)}`,
-      );
-
-      rabbit.publish({ type: 'photo', sourceImage, chatId: ctx.update.message.chat.id });
-
-      if (MIXPANEL_TOKEN !== '') {
-        ctx.mixpanel.track('photo_processed');
-        ctx.mixpanel.people.set({
-          $created: new Date().toISOString(),
-        });
-      }
-    });
-
-    response.data.on('error', (err) => {
-      throw new Error(err);
-    });
+    if (MIXPANEL_TOKEN !== '') {
+      ctx.mixpanel.track('photo_processed');
+      ctx.mixpanel.people.set({
+        $created: new Date().toISOString(),
+      });
+    }
   } catch (err) {
     throw new Error(DEFAULT_USER_ERROR_MESSAGE);
   }
