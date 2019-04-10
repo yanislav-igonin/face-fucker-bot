@@ -2,15 +2,10 @@ require('array-flat-polyfill');
 
 const Telegraf = require('telegraf');
 const TelegrafMixpanel = require('telegraf-mixpanel');
-const path = require('path');
-const axios = require('axios');
 const fs = require('fs-extra');
-const filesize = require('file-size');
-const nanoid = require('nanoid');
 
 const Rabbit = require('./modules/rabbitmq');
 const videoParser = require('./modules/videoParser');
-const { UserError } = require('./errors');
 const errorHandler = require('./middlewares/errorHandler');
 const unifiedHanlder = require('./modules/unifiedHanlder');
 
