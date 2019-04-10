@@ -1,1 +1,0 @@
-declare function imageParser(sourceImg: string, type: string): Promise<string>;
