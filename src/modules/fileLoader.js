@@ -27,7 +27,9 @@ const loadFile = (file_id, type) =>
 
     const fileInfo = await telegram.getFile(file_id);
     const fileLink = await telegram.getFileLink(file_id);
-    const fileName = path.basename(fileInfo.file_path);
+    const fileBasename = path.basename(fileInfo.file_path);
+    const uniqueId = nanoid();
+    const fileName = `${uniqueId}-${fileBasename}`;
 
     if (filesize(fileInfo.file_size).to('MB') > 20) {
       throw new UserError(
@@ -37,9 +39,8 @@ const loadFile = (file_id, type) =>
       );
     }
 
-    const uniqueId = nanoid();
 
-    const writer = await fs.createWriteStream(path.join(folder, `${uniqueId}-${fileName}`));
+    const writer = await fs.createWriteStream(path.join(folder, fileName));
 
     const response = await axios({
       url: fileLink,
@@ -49,7 +50,7 @@ const loadFile = (file_id, type) =>
 
     response.data.pipe(writer);
 
-    response.data.on('end', () => resolve(path.join(folder, `${uniqueId}-${fileName}`)));
+    response.data.on('end', () => resolve(path.join(folder, fileName)));
 
     response.data.on('error', (err) => {
       reject(err);
