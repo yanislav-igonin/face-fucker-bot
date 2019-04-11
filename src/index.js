@@ -102,7 +102,10 @@ bot.on('video_note', async (ctx) => {
     });
   }
 
-  const sourceVideo = await loadTelegramFile(ctx.update.message.video_note.file_id, DATA_TYPE.VIDEO);
+  const sourceVideo = await loadTelegramFile(
+    ctx.update.message.video_note.file_id,
+    DATA_TYPE.VIDEO,
+  );
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideoNote({ source: processedVideo });
   await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
