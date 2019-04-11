@@ -9,7 +9,7 @@ const { UserError } = require('../errors');
 
 const { FOLDERS, DATA_TYPE } = require('../config');
 
-const loadFile = (file_id, type) =>
+const loadTelegramFile = (file_id, type) =>
   new Promise(async (resolve, reject) => {
     let folder;
 
@@ -39,7 +39,6 @@ const loadFile = (file_id, type) =>
       );
     }
 
-
     const writer = await fs.createWriteStream(path.join(folder, fileName));
 
     const response = await axios({
@@ -57,4 +56,4 @@ const loadFile = (file_id, type) =>
     });
   });
 
-module.exports = loadFile;
+module.exports = { loadTelegramFile };

@@ -9,7 +9,7 @@ const videoParser = require('./modules/videoParser');
 const errorHandler = require('./middlewares/errorHandler');
 const unifiedHanlder = require('./modules/unifiedHanlder');
 
-const fileLoader = require('./modules/fileLoader');
+const { loadTelegramFile } = require('./modules/fileLoader');
 
 const {
   FOLDERS,
@@ -55,7 +55,7 @@ bot.on('photo', async (ctx) => {
   }
 
   try {
-    const sourceImage = await fileLoader(
+    const sourceImage = await loadTelegramFile(
       ctx.update.message.photo[ctx.update.message.photo.length - 1].file_id,
       DATA_TYPE.IMAGE,
     );
@@ -81,7 +81,7 @@ bot.on('video', async (ctx) => {
     });
   }
 
-  const sourceVideo = await fileLoader(ctx.update.message.video.file_id, DATA_TYPE.VIDEO);
+  const sourceVideo = await loadTelegramFile(ctx.update.message.video.file_id, DATA_TYPE.VIDEO);
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideo({ source: processedVideo });
   await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
@@ -102,7 +102,7 @@ bot.on('video_note', async (ctx) => {
     });
   }
 
-  const sourceVideo = await fileLoader(ctx.update.message.video_note.file_id, DATA_TYPE.VIDEO);
+  const sourceVideo = await loadTelegramFile(ctx.update.message.video_note.file_id, DATA_TYPE.VIDEO);
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideoNote({ source: processedVideo });
   await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
@@ -123,7 +123,7 @@ bot.on('animation', async (ctx) => {
     });
   }
 
-  const sourceVideo = await fileLoader(ctx.update.message.animation.file_id, DATA_TYPE.VIDEO);
+  const sourceVideo = await loadTelegramFile(ctx.update.message.animation.file_id, DATA_TYPE.VIDEO);
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideo({ source: processedVideo });
   await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
