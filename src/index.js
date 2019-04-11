@@ -9,7 +9,7 @@ const videoParser = require('./modules/videoParser');
 const errorHandler = require('./middlewares/errorHandler');
 const unifiedHanlder = require('./modules/unifiedHanlder');
 
-const fileLoader = require('./modules/fileLoader');
+const { loadTelegramFile, loadUrlFile } = require('./modules/fileLoader');
 
 const {
   FOLDERS,
@@ -42,7 +42,8 @@ bot.start((ctx) => {
   }
 
   ctx.reply(
-    'Welcome! Get fucked face in just a second!\n\n1) Кидаешь фотку или видос\n2) ...\n3) PROFIT!',
+    'Welcome! Get fucked face in just a second!\n\n'
+      + '1) Кидаешь фотку, видос или ссылку на картинку\n2) ...\n3) PROFIT!',
   );
 });
 
@@ -55,7 +56,7 @@ bot.on('photo', async (ctx) => {
   }
 
   try {
-    const sourceImage = await fileLoader(
+    const sourceImage = await loadTelegramFile(
       ctx.update.message.photo[ctx.update.message.photo.length - 1].file_id,
       DATA_TYPE.IMAGE,
     );
@@ -81,7 +82,7 @@ bot.on('video', async (ctx) => {
     });
   }
 
-  const sourceVideo = await fileLoader(ctx.update.message.video.file_id, DATA_TYPE.VIDEO);
+  const sourceVideo = await loadTelegramFile(ctx.update.message.video.file_id, DATA_TYPE.VIDEO);
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideo({ source: processedVideo });
   await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
@@ -102,7 +103,10 @@ bot.on('video_note', async (ctx) => {
     });
   }
 
-  const sourceVideo = await fileLoader(ctx.update.message.video_note.file_id, DATA_TYPE.VIDEO);
+  const sourceVideo = await loadTelegramFile(
+    ctx.update.message.video_note.file_id,
+    DATA_TYPE.VIDEO,
+  );
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideoNote({ source: processedVideo });
   await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
@@ -123,7 +127,7 @@ bot.on('animation', async (ctx) => {
     });
   }
 
-  const sourceVideo = await fileLoader(ctx.update.message.animation.file_id, DATA_TYPE.VIDEO);
+  const sourceVideo = await loadTelegramFile(ctx.update.message.animation.file_id, DATA_TYPE.VIDEO);
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideo({ source: processedVideo });
   await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
@@ -133,6 +137,48 @@ bot.on('animation', async (ctx) => {
     ctx.mixpanel.people.set({
       $created: new Date().toISOString(),
     });
+  }
+});
+
+bot.on('text', async (ctx) => {
+  if (ctx.update.message.text.includes('rick')) {
+    ctx.reply('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+  }
+
+  if (ctx.update.message.entities !== undefined) {
+    const urlEntities = ctx.update.message.entities.filter((entity) => entity.type === 'url');
+    const urls = urlEntities.map((urlEntity) =>
+      ctx.update.message.text.substring(urlEntity.offset, urlEntity.offset + urlEntity.length));
+
+    try {
+      const files = await Promise.all(urls.map((url) => loadUrlFile(url)));
+
+      files.forEach((file) => {
+        if (MIXPANEL_TOKEN !== '') {
+          ctx.mixpanel.track('link_uploaded');
+          ctx.mixpanel.people.set({
+            $created: new Date().toISOString(),
+          });
+        }
+
+        rabbit.publish({
+          type: DATA_TYPE.IMAGE,
+          sourceImage: file,
+          chatId: ctx.update.message.chat.id,
+        });
+
+        if (MIXPANEL_TOKEN !== '') {
+          ctx.mixpanel.track('link_processed');
+          ctx.mixpanel.people.set({
+            $created: new Date().toISOString(),
+          });
+        }
+      });
+    } catch (err) {
+      throw err;
+    }
+  } else {
+    ctx.reply('Enough talk! Send some pictures, darling');
   }
 });
 
