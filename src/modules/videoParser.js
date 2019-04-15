@@ -178,7 +178,7 @@ module.exports = (sourceVideo, ctx) =>
 
     const processedVideoFramesFiles = processedVideoFramesList.map((frame) =>
       path.join(FOLDERS.VIDEO_PROCESSED, frame));
-      
+
     await Promise.all(
       processedVideoFramesFiles.map((proccessedVideoFrameFile) =>
         fs.unlink(proccessedVideoFrameFile)),
@@ -186,7 +186,6 @@ module.exports = (sourceVideo, ctx) =>
 
     const fuckedVideo = filesToVideo.filter((el) =>
       new RegExp(`${path.basename(sourceVideo, '.mp4')}-processed-video+`).test(el));
-      
 
     if (!fuckedVideo[0]) {
       VideoProgressParsing.send('Status: Compilation failed! :(');
