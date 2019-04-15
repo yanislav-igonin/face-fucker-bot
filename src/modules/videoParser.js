@@ -165,28 +165,35 @@ module.exports = (sourceVideo, ctx) =>
       reject(new Error(`ffmpeg error: ${err}`));
     }
 
-    fs.readdir(FOLDERS.VIDEO_PROCESSED, async (errToVideo, filesToVideo) => {
-      const processedVideoFramesList = filesToVideo.filter((el) =>
-        new RegExp(`${path.basename(sourceVideo, '.mp4')}-frame-[0-9]+`).test(el));
+    let filesToVideo;
 
-      const processedVideoFramesFiles = processedVideoFramesList.map((frame) =>
-        path.join(FOLDERS.VIDEO_PROCESSED, frame));
-      await Promise.all(
-        processedVideoFramesFiles.map((proccessedVideoFrameFile) =>
-          fs.unlink(proccessedVideoFrameFile)),
-      );
+    try {
+      filesToVideo = await fs.readdir(FOLDERS.VIDEO_PROCESSED);
+    } catch (err) {
+      reject(err);
+    }
 
-      const fuckedVideo = filesToVideo.filter((el) =>
-        new RegExp(`${path.basename(sourceVideo, '.mp4')}-processed-video+`).test(el));
+    const processedVideoFramesList = filesToVideo.filter((el) =>
+      new RegExp(`${path.basename(sourceVideo, '.mp4')}-frame-[0-9]+`).test(el));
 
-      if (!fuckedVideo[0]) {
-        VideoProgressParsing.send('Status: Compilation failed! :(');
+    const processedVideoFramesFiles = processedVideoFramesList.map((frame) =>
+      path.join(FOLDERS.VIDEO_PROCESSED, frame));
 
-        reject(new Error("Proccessed video doesn't exist!"));
-      }
+    await Promise.all(
+      processedVideoFramesFiles.map((proccessedVideoFrameFile) =>
+        fs.unlink(proccessedVideoFrameFile)),
+    );
 
-      resolve(path.join(FOLDERS.VIDEO_PROCESSED, fuckedVideo[0]));
+    const fuckedVideo = filesToVideo.filter((el) =>
+      new RegExp(`${path.basename(sourceVideo, '.mp4')}-processed-video+`).test(el));
 
-      VideoProgressParsing.send('Status: Enjoy your fucked video!');
-    });
+    if (!fuckedVideo[0]) {
+      VideoProgressParsing.send('Status: Compilation failed! :(');
+
+      reject(new Error("Proccessed video doesn't exist!"));
+    }
+
+    resolve(path.join(FOLDERS.VIDEO_PROCESSED, fuckedVideo[0]));
+
+    VideoProgressParsing.send('Status: Enjoy your fucked video!');
   });
