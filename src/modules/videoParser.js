@@ -1,9 +1,12 @@
 const { spawn } = require('child_process');
-const fs = require('fs-extra');
 const path = require('path');
 const random = require('random-int');
 
 const imageParser = require('./imageParser');
+
+const {
+  files: { readDir, clearFile, clearFiles },
+} = require('../helpers');
 
 const ProgressLog = require('../progressLog');
 
@@ -23,10 +26,10 @@ const parseVideoToImages = (sourceVideo) =>
       'scale=-1:480,fps=25',
       '-qscale:v',
       FRAME_QUALITY,
-      `${videoFramesName}-frame-%04d.jpg`,
       '-hide_banner',
       '-loglevel',
       'error',
+      `${videoFramesName}-frame-%04d.jpg`,
     ]);
 
     videoConverterToImages.on('error', (err) => {
@@ -52,8 +55,10 @@ const parseImagesToVideo = (sourceVideo) =>
       'libx264',
       '-vf',
       'pad=ceil(iw/2)*2:ceil(ih/2)*2',
-      `${processedVideoFramesName}-processed-video.mp4`,
       '-hide_banner',
+      '-loglevel',
+      'error',
+      `${processedVideoFramesName}-processed-video.mp4`,
     ]);
 
     videoConverterToVideo.on('error', (err) => {
@@ -81,7 +86,7 @@ module.exports = (sourceVideo, ctx) =>
     let filesToImages;
 
     try {
-      filesToImages = await fs.readdir(FOLDERS.VIDEO_FRAMES);
+      filesToImages = await readDir(FOLDERS.VIDEO_FRAMES);
     } catch (err) {
       ctx.reply('Status: Compilation failed! :(');
       reject(err);
@@ -152,10 +157,6 @@ module.exports = (sourceVideo, ctx) =>
 
     VideoProgressParsing.send('Status: Frames processing completed');
 
-    await Promise.all(videoFramesFiles.map((videoFramesFile) => fs.unlink(videoFramesFile)));
-
-    VideoProgressParsing.send('Status: Source frames cleared');
-
     VideoProgressParsing.send('Status: Video compilation started');
 
     try {
@@ -168,7 +169,7 @@ module.exports = (sourceVideo, ctx) =>
     let filesToVideo;
 
     try {
-      filesToVideo = await fs.readdir(FOLDERS.VIDEO_PROCESSED);
+      filesToVideo = await readDir(FOLDERS.VIDEO_PROCESSED);
     } catch (err) {
       reject(err);
     }
@@ -179,11 +180,6 @@ module.exports = (sourceVideo, ctx) =>
     const processedVideoFramesFiles = processedVideoFramesList.map((frame) =>
       path.join(FOLDERS.VIDEO_PROCESSED, frame));
 
-    await Promise.all(
-      processedVideoFramesFiles.map((proccessedVideoFrameFile) =>
-        fs.unlink(proccessedVideoFrameFile)),
-    );
-
     const fuckedVideo = filesToVideo.filter((el) =>
       new RegExp(`${path.basename(sourceVideo, '.mp4')}-processed-video+`).test(el));
 
@@ -192,6 +188,12 @@ module.exports = (sourceVideo, ctx) =>
 
       reject(new Error("Proccessed video doesn't exist!"));
     }
+
+    await Promise.all([
+      clearFiles(videoFramesFiles),
+      clearFiles(processedVideoFramesFiles),
+      clearFile(sourceVideo),
+    ]);
 
     resolve(path.join(FOLDERS.VIDEO_PROCESSED, fuckedVideo[0]));
 
