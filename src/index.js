@@ -17,10 +17,10 @@ const {
   ERRORS: { DEFAULT_USER_ERROR_MESSAGE },
 } = require('./config');
 
-const { BOT_TOKEN, MIXPANEL_TOKEN = '' } = process.env;
+const { BOT_TOKEN, MIXPANEL_TOKEN = '', RABBIT_URL } = process.env;
 
 const bot = new Telegraf(BOT_TOKEN);
-const rabbit = new Rabbit(process.env.RABBIT_URL);
+const rabbit = new Rabbit(RABBIT_URL);
 
 bot.catch((err) => {
   console.error(`ERROR: ${err}\n`);
@@ -85,7 +85,7 @@ bot.on('video', async (ctx) => {
   const sourceVideo = await loadTelegramFile(ctx.update.message.video.file_id, DATA_TYPE.VIDEO);
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideo({ source: processedVideo });
-  await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+  await fs.unlink(processedVideo);
 
   if (MIXPANEL_TOKEN !== '') {
     ctx.mixpanel.track('video_processed');
@@ -109,7 +109,7 @@ bot.on('video_note', async (ctx) => {
   );
   const processedVideo = await videoParser(sourceVideo, ctx);
   await ctx.replyWithVideoNote({ source: processedVideo });
-  await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+  await fs.unlink(processedVideo);
 
   if (MIXPANEL_TOKEN !== '') {
     ctx.mixpanel.track('video_note_processed');
@@ -127,16 +127,23 @@ bot.on('animation', async (ctx) => {
     });
   }
 
-  const sourceVideo = await loadTelegramFile(ctx.update.message.animation.file_id, DATA_TYPE.VIDEO);
-  const processedVideo = await videoParser(sourceVideo, ctx);
-  await ctx.replyWithVideo({ source: processedVideo });
-  await Promise.all([fs.unlink(sourceVideo), fs.unlink(processedVideo)]);
+  try {
+    const sourceVideo = await loadTelegramFile(
+      ctx.update.message.animation.file_id,
+      DATA_TYPE.VIDEO,
+    );
+    const processedVideo = await videoParser(sourceVideo, ctx);
+    await ctx.replyWithVideo({ source: processedVideo });
+    await fs.unlink(processedVideo);
 
-  if (MIXPANEL_TOKEN !== '') {
-    ctx.mixpanel.track('animation_processed');
-    ctx.mixpanel.people.set({
-      $created: new Date().toISOString(),
-    });
+    if (MIXPANEL_TOKEN !== '') {
+      ctx.mixpanel.track('animation_processed');
+      ctx.mixpanel.people.set({
+        $created: new Date().toISOString(),
+      });
+    }
+  } catch (err) {
+    throw err;
   }
 });
 
