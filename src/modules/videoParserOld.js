@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 const random = require('random-int');
 
-const imageParser = require('./imageParser');
+const imageParser = require('../consumers/imageProcessor/processImage');
 
 const {
   files: { readDir, clearFile, clearFiles },

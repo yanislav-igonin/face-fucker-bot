@@ -3,10 +3,8 @@ const amqplib = require('amqplib');
 class Rabbit {
   constructor(connectionUrl, options) {
     this.connectionUrl = connectionUrl;
-    this.queueName = 'image_processing';
     this.options = options;
     this.connection = null;
-    this.channels = [];
   }
 
   /* eslint-disable-next-line consistent-return */
@@ -41,29 +39,21 @@ class Rabbit {
       await this.connect();
     }
 
-    if (this.channels.length === 0) {
-      for (let i = 0; i < 10; i += 1) {
-        this.channels.push(await this.connection.createChannel());
-        this.channels[i].assertQueue(this.queueName, { durable: true });
-        this.channels[i].prefetch(10);
+    const channel = await this.connection.createChannel();
 
-        this.channels[i].on('error', async () => {
-          this.channels[i].close().catch(console.error);
-        });
+    channel.on('error', async () => {
+      channel.close().catch(console.error);
+    });
 
-        this.channels[i].on('close', async () => {
-          console.error('RabbitMQ: Channel close');
-        });
-      }
-    }
-
-    return this.channels[Math.floor(Math.random() * this.channels.length)];
+    return channel;
   }
 
-  async consume(onMessage) {
+  async consume(queueName, prefetch, onMessage) {
     const channel = await this.getChannel();
+    channel.assertQueue(queueName, { durable: true });
+    channel.prefetch(prefetch);
 
-    channel.consume(this.queueName, async (msg) => {
+    channel.consume(queueName, async (msg) => {
       const task = JSON.parse(msg.content.toString());
 
       await onMessage(task);
@@ -71,11 +61,17 @@ class Rabbit {
     });
   }
 
-  async publish(data) {
+  async publish(queueName, data) {
     const channel = await this.getChannel();
 
-    channel.sendToQueue(this.queueName, Buffer.from(JSON.stringify(data)));
+    const isSend = channel.sendToQueue(queueName, Buffer.from(JSON.stringify(data)));
+
+    if (isSend) {
+      channel.close().catch(console.error);
+    }
   }
 }
 
-module.exports = Rabbit;
+const rabbit = new Rabbit(process.env.RABBIT_URL);
+
+module.exports = rabbit;

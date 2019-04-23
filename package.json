@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon --inspect=0.0.0.0:9229 src/index.js",
     "eslint": "eslint .",
     "eslint:fix": "eslint . --fix",
     "test": "NODE_ENV=test jest",
@@ -15,14 +15,12 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.5.3",
-    "array-flat-polyfill": "^1.0.0",
     "axios": "^0.18.0",
     "file-size": "^1.0.0",
     "fs-extra": "^7.0.1",
     "nanoid": "^2.0.1",
     "random-int": "^1.0.0",
-    "telegraf": "^3.27.1",
-    "telegraf-mixpanel": "^1.0.0"
+    "telegraf": "^3.27.1"
   },
   "devDependencies": {
     "eslint": "^5.15.0",
