@@ -6,7 +6,6 @@ services:
       dockerfile: development.Dockerfile
     environment: 
       - NODE_ENV=development
-      - REDIS_HOST=redis
       - BOT_TOKEN=${BOT_TOKEN}
       - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
       - RABBIT_URL=amqp://rabbitmq
@@ -15,6 +14,10 @@ services:
     volumes:
       - ./src:/usr/src/app/src
       - ./uploads:/usr/src/app/uploads
+    ports:
+      - 9229:9229
 
   rabbitmq:
-    image: rabbitmq:alpine
+    image: rabbitmq:management-alpine
+    ports:
+      - 15672:15672
