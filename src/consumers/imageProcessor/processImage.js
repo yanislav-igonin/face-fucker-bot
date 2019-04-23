@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const random = require('random-int');
 const path = require('path');
 
-const { DATA_TYPE, FOLDERS, LIQUFY_DATA } = require('../config');
+const { DATA_TYPE, FOLDERS, LIQUFY_DATA } = require('../../config');
 
 module.exports = (
   sourceImg,
@@ -20,7 +20,7 @@ module.exports = (
         processedImg = path.join(FOLDERS.IMAGE_PROCESSED, path.basename(sourceImg));
         break;
       case DATA_TYPE.VIDEO:
-        processedImg = path.join(FOLDERS.VIDEO_PROCESSED, path.basename(sourceImg));
+        processedImg = path.join(FOLDERS.VIDEO_PROCESSED_FRAMES, path.basename(sourceImg));
         break;
       default:
         processedImg = path.join(FOLDERS.IMAGE_PROCESSED, path.basename(sourceImg));
@@ -36,8 +36,8 @@ module.exports = (
       processedImg,
     ]);
 
-    magick.stderr.on('data', (data) => {
-      reject(new Error(`magick error: ${data}`));
+    magick.on('error', (err) => {
+      reject(err);
     });
 
     magick.on('close', () => resolve(processedImg));

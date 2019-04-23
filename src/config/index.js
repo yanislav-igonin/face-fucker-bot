@@ -10,7 +10,8 @@ const FOLDERS = {
   IMAGE_PROCESSED: path.join(__dirname, '../../uploads/images/processed'),
   VIDEO_UPLOADS: path.join(__dirname, '../../uploads/videos/uploaded'),
   VIDEO_PROCESSED: path.join(__dirname, '../../uploads/videos/processed'),
-  VIDEO_FRAMES: path.join(__dirname, '../../uploads/videos/videoFrames'),
+  VIDEO_SOURCE_FRAMES: path.join(__dirname, '../../uploads/videos/sourceFrames'),
+  VIDEO_PROCESSED_FRAMES: path.join(__dirname, '../../uploads/videos/processedFrames'),
 };
 
 const DEFAULT_USER_ERROR_MESSAGE = 'Something went wrong, please try again.';

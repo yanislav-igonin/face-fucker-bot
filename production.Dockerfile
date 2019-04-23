@@ -53,5 +53,5 @@ RUN apt install -y --no-install-recommends ffmpeg
   
 WORKDIR /usr/src/app
 COPY . .
-RUN npm install
+RUN npm install --only=production
 CMD ["npm", "start"]
