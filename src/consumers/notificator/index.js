@@ -5,7 +5,25 @@ module.exports = async ({
   type, chatId, messageId, message,
 }) => {
   try {
-    if (message !== undefined) {
+    if (chatId === undefined) {
+      console.log(
+        'CHAT_ID IS UNDEFINED(type, chatId, messageId, message): ',
+        type,
+        chatId,
+        messageId,
+        message,
+      );
+    }
+
+    if (message === undefined) {
+      console.log(
+        'MESSAGE IS UNDEFINED(type, chatId, messageId, message): ',
+        type,
+        chatId,
+        messageId,
+        message,
+      );
+    } else {
       switch (type) {
         case 'send':
           await telegram.sendMessage(chatId, message);
@@ -29,6 +47,8 @@ module.exports = async ({
         chatId,
         err: { message: err.message, isUserError: err.isUserError === true, stack: err.stack },
       });
+    } else {
+      console.log('MESSAGE IS NOT MODIFIED');
     }
   }
 };
