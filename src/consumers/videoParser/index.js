@@ -5,7 +5,21 @@ module.exports = async ({
   chatId, messageId, sourceVideoFile, type,
 }) => {
   try {
+    await rabbit.publish('notificating', {
+      chatId,
+      messageId,
+      type: 'update',
+      message: 'Parsing video...',
+    });
+
     const parsedImageFiles = await parseVideo(sourceVideoFile);
+
+    await rabbit.publish('notificating', {
+      chatId,
+      messageId,
+      type: 'update',
+      message: 'Video frames added to processing queue...',
+    });
 
     for (const parsedImageFile of parsedImageFiles) {
       await rabbit.publish('image_processing', {
@@ -17,13 +31,6 @@ module.exports = async ({
         framesCount: parsedImageFiles.length,
       });
     }
-
-    await rabbit.publish('notificating', {
-      chatId,
-      messageId,
-      type: 'update',
-      message: 'Video frames added to processing queue...',
-    });
 
     return;
   } catch (err) {

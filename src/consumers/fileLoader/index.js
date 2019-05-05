@@ -24,13 +24,6 @@ module.exports = async ({
         sourceVideoFile: sourceFile,
         type,
       });
-
-      await rabbit.publish('notificating', {
-        chatId,
-        messageId,
-        type: 'update',
-        message: 'Parsing video...',
-      });
     }
 
     return;

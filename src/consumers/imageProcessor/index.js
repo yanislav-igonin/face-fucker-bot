@@ -90,13 +90,6 @@ module.exports = async ({
 
         liquifyVideoFactorCache.delete(sourceVideoFile);
         progressCache.delete(sourceVideoFile);
-
-        await rabbit.publish('notificating', {
-          chatId,
-          messageId,
-          type: 'update',
-          message: 'Compiling gif...',
-        });
       }
     }
 

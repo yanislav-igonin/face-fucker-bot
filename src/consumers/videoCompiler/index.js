@@ -12,6 +12,13 @@ module.exports = async ({
     type,
   );
   try {
+    await rabbit.publish('notificating', {
+      chatId,
+      messageId,
+      type: 'update',
+      message: 'Compiling gif...',
+    });
+
     const compiledVideo = await compileVideo(sourceVideoFile);
 
     await rabbit.publish('file_sending', {
@@ -20,13 +27,6 @@ module.exports = async ({
       sourceVideoFile,
       processedVideoFile: compiledVideo,
       type,
-    });
-
-    await rabbit.publish('notificating', {
-      chatId,
-      messageId,
-      type: 'update',
-      message: 'Sending file...',
     });
 
     return;
