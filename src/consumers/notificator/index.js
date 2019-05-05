@@ -5,25 +5,9 @@ module.exports = async ({
   type, chatId, messageId, message,
 }) => {
   try {
-    if (chatId === undefined) {
-      console.log(
-        'CHAT_ID IS UNDEFINED(type, chatId, messageId, message): ',
-        type,
-        chatId,
-        messageId,
-        message,
-      );
-    }
+    console.log('NOTIFICATOR: type, chatId, messageId, message', type, chatId, messageId, message);
 
-    if (message === undefined) {
-      console.log(
-        'MESSAGE IS UNDEFINED(type, chatId, messageId, message): ',
-        type,
-        chatId,
-        messageId,
-        message,
-      );
-    } else {
+    if (message !== undefined) {
       switch (type) {
         case 'send':
           await telegram.sendMessage(chatId, message);

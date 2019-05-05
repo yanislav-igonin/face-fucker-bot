@@ -4,6 +4,13 @@ const rabbit = require('../../modules/rabbit');
 module.exports = async ({
   chatId, messageId, sourceVideoFile, type,
 }) => {
+  console.log(
+    'VIDEO COMPILER: chatId, messageId, sourceVideoFile, type',
+    chatId,
+    messageId,
+    sourceVideoFile,
+    type,
+  );
   try {
     const compiledVideo = await compileVideo(sourceVideoFile);
 

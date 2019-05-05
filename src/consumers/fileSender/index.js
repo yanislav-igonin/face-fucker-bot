@@ -17,7 +17,7 @@ module.exports = async ({
         await telegram.sendPhoto(chatId, { source: processedImageFile });
         break;
       case DATA_TYPE.VIDEO:
-        console.log('TCL: processedVideoFile', processedVideoFile);
+        console.log('TCL: FILE SENDER', processedVideoFile);
         await telegram.sendVideo(chatId, { source: processedVideoFile });
 
         await rabbit.publish('notificating', {
