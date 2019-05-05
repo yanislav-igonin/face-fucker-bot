@@ -25,7 +25,7 @@ module.exports = async ({
           type: 'update',
           message: 'Sending file...',
         });
-        
+
         await telegram.sendVideo(chatId, { source: processedVideoFile });
 
         await rabbit.publish('notificating', {
