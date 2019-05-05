@@ -4,6 +4,7 @@ const {
 } = require('../../config');
 
 module.exports = async ({ err, chatId }) => {
+  console.log('ERROR HANDLER', err, chatId);
   try {
     if (err.isUserError) {
       await telegram.sendMessage(chatId, err.message);
