@@ -1,11 +1,21 @@
 const telegram = require('../../modules/telegram');
 const rabbit = require('../../modules/rabbit');
 
+const lastMessageUpdateTextMap = new Map();
+
 module.exports = async ({
   type, chatId, messageId, message,
 }) => {
   try {
-    console.log('NOTIFICATOR: type, chatId, messageId, message', type, chatId, messageId, message);
+    if (lastMessageUpdateTextMap.get(messageId) === undefined) {
+      lastMessageUpdateTextMap.set(messageId, message);
+    }
+
+    if (lastMessageUpdateTextMap.get(messageId) === message) {
+      return;
+    }
+
+    lastMessageUpdateTextMap.set(messageId, message);
 
     if (message !== undefined) {
       switch (type) {
