@@ -67,9 +67,8 @@ module.exports = async ({
       );
 
       const progress = parseInt((processedFrames.length / framesCount) * 100, 10);
-      const progressInCache = progressCache.get(sourceVideoFile);
 
-      if (progress !== progressInCache) {
+      if (progress !== progressCache.get(sourceVideoFile)) {
         await rabbit.publish('notificating', {
           chatId,
           messageId,
