@@ -21,4 +21,5 @@ services:
         window: 10s
       placement:
         constraints:
-          - node.role == manager
+          - node.role == worker
+          - node.host == bots
