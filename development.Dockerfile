@@ -52,6 +52,9 @@ RUN apt update
 RUN apt install -y --no-install-recommends ffmpeg
 
 WORKDIR /usr/src/app
-COPY . .
-RUN npm install
+COPY package.json ./
+COPY package-lock.json ./
+COPY tsconfig.json ./
+COPY ./src ./src
+RUN npm i
 CMD ["npm", "run", "dev"]
