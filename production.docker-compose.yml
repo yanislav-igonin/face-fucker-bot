@@ -1,14 +1,16 @@
 version: '3.7'
+
 services:
-  bot:
+  app:
     image: registry.gitlab.com/yanislav-igonin/face_fucker_bot:latest
     environment: 
       - NODE_ENV=production
       - BOT_TOKEN=${BOT_TOKEN}
-      - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
       - RABBIT_URL=${RABBIT_URL}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - POSTGRES_URL=${POSTGRES_URL}
     volumes:
-      - ./uploads:/usr/src/app/uploads
+      - /root/face_fucker_bot/uploads:/usr/src/app/uploads
     deploy:
       replicas: 1
       update_config:
@@ -22,4 +24,4 @@ services:
       placement:
         constraints:
           - node.role == worker
-          - node.host == bots
+          - node.hostname == bots
