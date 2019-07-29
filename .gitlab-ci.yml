@@ -1,5 +1,6 @@
 stages:
   - lint
+  - build
   - release
   - deploy
 
@@ -19,6 +20,21 @@ lint:
     - npm run eslint
 
     
+
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+      expire_in: 1 day
+      paths:
+        - build
+  only:
+    - tags
+  except:
+    - /^(?!master).+@/ 
+
+
 
 release:
   image: docker:stable
@@ -61,10 +77,10 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan 142.93.230.148 >> ~/.ssh/known_hosts
+    - ssh-keyscan $VPS_HOST >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh root@142.93.230.148 "
+    - ssh root@$VPS_HOST "
         docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY &&
         docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG &&
         docker service update --image $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG $CONTAINER_NAME "

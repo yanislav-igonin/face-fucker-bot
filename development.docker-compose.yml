@@ -1,14 +1,16 @@
 version: '3.7'
+
 services:
-  bot:
+  app:
     build:
       context: .
       dockerfile: development.Dockerfile
-    environment: 
+    environment:
       - NODE_ENV=development
       - BOT_TOKEN=${BOT_TOKEN}
-      - MIXPANEL_TOKEN=${MIXPANEL_TOKEN}
       - RABBIT_URL=amqp://rabbitmq
+      - SENTRY_DSN=${SENTRY_DSN}
+      - POSTGRES_URL=postgres://face_fucker:123456@postgres/face_fucker_bot
     depends_on:
       - rabbitmq
     volumes:
@@ -21,3 +23,12 @@ services:
     image: rabbitmq:management-alpine
     ports:
       - 15672:15672
+
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=face_fucker
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=face_fucker_bot
