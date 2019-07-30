@@ -49,8 +49,8 @@ bot.start(async (ctx: IUserContextMessageUpdate): Promise<void> => {
     user = await userRepository.createUser(ctx.update.message.from);
   }
 
-  const message = localizator(user.languageCode, 'start')();
-  ctx.reply(message);
+  const localizedMessage = localizator(user.languageCode, 'start')();
+  ctx.reply(localizedMessage);
 });
 
 bot.on('photo', async (ctx: IPhotoContextMessageUpdate): Promise<void> => {
@@ -90,7 +90,9 @@ bot.on('video', async (ctx: IVideoContextMessageUpdate): Promise<void> => {
       user = await userRepository.createUser(ctx.update.message.from);
     }
 
-    const message = await ctx.reply('Loading file...', {
+    const localizedMessage = localizator(user.languageCode, 'loadingFile')();
+
+    const sentMessage = await ctx.reply(localizedMessage, {
       reply_to_message_id: ctx.update.message.message_id,
     });
 
@@ -98,7 +100,7 @@ bot.on('video', async (ctx: IVideoContextMessageUpdate): Promise<void> => {
       fileId: ctx.update.message.video.file_id,
       type: fileType.video,
       user,
-      messageId: message.message_id,
+      messageId: sentMessage.message_id,
     });
   } catch (err) {
     await rabbit.publish('error_handling', {
@@ -121,7 +123,9 @@ bot.on('video_note', async (ctx: IVideoNoteContextMessageUpdate): Promise<void> 
       user = await userRepository.createUser(ctx.update.message.from);
     }
 
-    const message = await ctx.reply('Loading file...', {
+    const localizedMessage = localizator(user.languageCode, 'loadingFile')();
+
+    const sentMessage = await ctx.reply(localizedMessage, {
       reply_to_message_id: ctx.update.message.message_id,
     });
 
@@ -129,7 +133,7 @@ bot.on('video_note', async (ctx: IVideoNoteContextMessageUpdate): Promise<void> 
       fileId: ctx.update.message.video_note.file_id,
       type: fileType.video,
       user,
-      messageId: message.message_id,
+      messageId: sentMessage.message_id,
     });
   } catch (err) {
     await rabbit.publish('error_handling', {
@@ -153,7 +157,9 @@ bot.on('animation', async (ctx: IAnimationContextMessageUpdate): Promise<void> =
       user = await userRepository.createUser(ctx.update.message.from);
     }
 
-    const message = await ctx.reply('Loading file...', {
+    const localizedMessage = localizator(user.languageCode, 'loadingFile')();
+
+    const sentMessage = await ctx.reply(localizedMessage, {
       reply_to_message_id: ctx.update.message.message_id,
     });
 
@@ -161,7 +167,7 @@ bot.on('animation', async (ctx: IAnimationContextMessageUpdate): Promise<void> =
       fileId: ctx.update.message.animation.file_id,
       type: fileType.video,
       user,
-      messageId: message.message_id,
+      messageId: sentMessage.message_id,
     });
   } catch (err) {
     await rabbit.publish('error_handling', {
@@ -187,8 +193,10 @@ bot.on('text', async (ctx: ITextContextMessageUpdate): Promise<void> => {
   }
 
   if (ctx.update.message.entities === undefined) {
-    const message = localizator(user.languageCode, 'textWithoutPictures')();
-    ctx.reply(message);
+    const localizedMessage = localizator(
+      user.languageCode, 'textWithoutPictures',
+    )();
+    ctx.reply(localizedMessage);
     return;
   }
 

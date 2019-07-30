@@ -1,5 +1,5 @@
 import { User } from '../../modules/db/entities';
-import { rabbit, telegram, logger } from '../../modules';
+import { rabbit, telegram, localizator } from '../../modules';
 import { fileType } from '../../config';
 
 interface IFileSenderData {
@@ -29,7 +29,7 @@ export default async ({
           user,
           messageId,
           type: 'update',
-          message: 'Enjoy your fucked video!',
+          message: localizator(user.languageCode, 'enjoyVideo')(),
         });
         break;
 

@@ -1,5 +1,5 @@
 import compileVideo from './compileVideo';
-import { rabbit } from '../../modules';
+import { rabbit, localizator } from '../../modules';
 import { User } from '../../modules/db/entities';
 
 interface IVideoCompilerData {
@@ -27,7 +27,7 @@ export default async ({
       user,
       messageId,
       type: 'update',
-      message: 'Sending file...',
+      message: localizator(user.languageCode, 'sendingFile')(),
     });
 
     return;
