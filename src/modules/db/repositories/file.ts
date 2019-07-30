@@ -1,6 +1,4 @@
-import { getRepository } from 'typeorm';
-// import { User as IUserData } from 'telegram-typings';
-
+import db from '..';
 import { File, User } from '../entities';
 
 interface IFileData {
@@ -10,7 +8,7 @@ interface IFileData {
 }
 
 export const createFile = async (data: IFileData): Promise<File> => {
-  const fileRepository = getRepository(File);
+  const fileRepository = db.getRepository(File);
   const file = new File();
   file.type = data.type;
   file.user = data.user;
