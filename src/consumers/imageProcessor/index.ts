@@ -2,7 +2,7 @@ import path from 'path';
 
 import { User } from '../../modules/db/entities';
 import processImage from './processImage';
-import { rabbit, logger } from '../../modules';
+import { localizator, rabbit, logger } from '../../modules';
 import { fileType, processFactor, folders } from '../../config';
 import { random, files } from '../../helpers';
 
@@ -120,7 +120,10 @@ const processVideoImage = async ({
       user,
       messageId,
       type: 'update',
-      message: `Processing video frames... ${progress}%`,
+      message: localizator(
+        user.languageCode,
+        'processingVideoFrames',
+      )(progress),
     });
   }
 
@@ -140,7 +143,7 @@ const processVideoImage = async ({
       user,
       messageId,
       type: 'update',
-      message: 'Compiling gif...',
+      message: localizator(user.languageCode, 'compilingVideo')(),
     });
   }
 };

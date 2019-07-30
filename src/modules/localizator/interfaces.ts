@@ -8,5 +8,14 @@ interface IErrorsLocaleData {
 export interface ILocaleData {
   start: string;
   textWithoutPictures: string;
+
+  loadingFile: string;
+  parsingVideo: string;
+  videoFramesAddedToProcessingQueue: string;
+  processingVideoFrames(progress: number): string;
+  compilingVideo: string;
+  sendingFile: string;
+  enjoyVideo: string;
+
   errors: IErrorsLocaleData;
 }

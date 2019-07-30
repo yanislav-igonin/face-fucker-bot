@@ -1,5 +1,5 @@
 import parseVideo from './parseVideo';
-import { rabbit } from '../../modules';
+import { localizator, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';
 
 interface IVideoParserData {
@@ -32,7 +32,10 @@ export default async ({
       user,
       messageId,
       type: 'update',
-      message: 'Video frames added to processing queue...',
+      message: localizator(
+        user.languageCode,
+        'videoFramesAddedToProcessingQueue',
+      )(),
     });
   } catch (err) {
     await rabbit.publish('error_handling', {

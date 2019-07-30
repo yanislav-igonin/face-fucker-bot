@@ -1,5 +1,5 @@
 
-import { rabbit } from '../../modules';
+import { localizator, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';
 import { fileRepository } from '../../modules/db/repositories';
 import {
@@ -56,7 +56,7 @@ export default async ({
           user,
           messageId,
           type: 'update',
-          message: 'Parsing video...',
+          message: localizator(user.languageCode, 'parsingVideo')(),
         });
         break;
 
