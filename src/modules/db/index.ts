@@ -9,7 +9,10 @@ const connection = connectionManager.create({
   url: app.dbUrl,
   entities: [File, User],
   logging: app.debug,
-  synchronize: true,
+  synchronize: false,
+  extra: {
+    max: 5,
+  },
 });
 
 export default connection;
