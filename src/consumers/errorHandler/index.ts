@@ -14,6 +14,12 @@ interface IErrorHandlerData {
 
 export default async ({ err, user }: IErrorHandlerData): Promise<void> => {
   try {
+    if (user === undefined) {
+      // Logging previous error to know original error cause.
+      logger.error(err);
+      throw new Error('user is undefined');
+    }
+
     if (err.isUserError) {
       await telegram.sendMessage(user.id, err.message);
     } else {
