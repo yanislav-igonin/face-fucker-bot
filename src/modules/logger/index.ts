@@ -2,15 +2,20 @@ import pino, { Logger } from 'pino';
 
 import { app } from '../../config';
 
-interface ILogger {
-  [key: string]: Logger;
-}
+const createLogger = (): Logger => {
+  const logLevel = (): string => {
+    if (app.debug) return 'debug';
+    if (app.env === 'development') return 'info';
 
-const loggers: ILogger = {
-  development: pino({ level: app.debug ? 'debug' : 'info', prettyPrint: true }),
-  production: pino({ level: app.debug ? 'debug' : 'error' }),
+    return 'error';
+  };
+
+  return pino({
+    level: logLevel(),
+    prettyPrint: app.env !== 'production',
+  });
 };
 
-const logger: Logger = loggers[app.env];
+const logger = createLogger();
 
 export default logger;
