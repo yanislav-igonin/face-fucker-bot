@@ -3,6 +3,8 @@ version: '3.7'
 services:
   app:
     image: registry.gitlab.com/yanislav-igonin/face_fucker_bot:latest
+    networks:
+      - web
     environment: 
       - NODE_ENV=production
       - BOT_TOKEN=${BOT_TOKEN}
@@ -31,3 +33,8 @@ services:
         traefik.enable: "true"
         traefik.frontend.rule: "Host:${WEBHOOK_URL}"
         traefik.port: ${WEBHOOK_PORT}
+
+networks:
+  web:
+    driver: overlay
+    external: true
