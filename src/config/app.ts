@@ -6,6 +6,8 @@ interface IAppConfig {
   dbUrl: string;
   sentryDsn: string;
   release: string;
+  webhookUrl: string;
+  webhookPort: number;
 }
 
 const app: IAppConfig = {
@@ -16,6 +18,10 @@ const app: IAppConfig = {
   dbUrl: process.env.POSTGRES_URL || 'localhost',
   sentryDsn: process.env.SENTRY_DSN || '',
   release: process.env.CI_COMMIT_TAG || 'development',
+  webhookUrl: process.env.WEBHOOK_URL || '',
+  webhookPort: process.env.WEBHOOK_PORT
+    ? parseInt(process.env.WEBHOOK_PORT, 10)
+    : 8000,
 };
 
 export default app;

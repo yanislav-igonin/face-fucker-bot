@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import Telegraf from 'telegraf';
 import fs from 'fs-extra';
 import * as Sentry from '@sentry/node';
+import ngrok from 'ngrok';
 
 import {
   IAnimationContextMessageUpdate,
@@ -30,7 +31,9 @@ import videoParser from './consumers/videoParser';
 import videoCompiler from './consumers/videoCompiler';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-const bot: Telegraf<any> = new Telegraf(app.botToken);
+const bot: Telegraf<any> = new Telegraf(
+  app.botToken, { telegram: { webhookReply: false } },
+);
 
 Sentry.init({
   dsn: app.sentryDsn,
@@ -258,9 +261,17 @@ Promise.all([
     rabbit.consume('file_cleaning', 0, fileCleaner);
     rabbit.consume('error_handling', 0, errorHandler);
     rabbit.consume('notificating', 0, notificator);
+
     await db.connect();
     logger.info('db - connection - success');
-    bot.startPolling();
+
+    let url = app.webhookUrl;
+    if (app.env === 'development') {
+      url = await ngrok.connect(app.webhookPort);
+    }
+    bot.telegram.setWebhook(url);
+    bot.startWebhook('/', null, app.webhookPort);
+
     logger.info('bot - online');
   })
   .catch((err: Error): void => {

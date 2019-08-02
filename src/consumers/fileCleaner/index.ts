@@ -1,6 +1,6 @@
 import path from 'path';
 
-import rabbit from '../../modules/rabbit';
+import { logger, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';
 import { files } from '../../helpers';
 import { fileType, folders } from '../../config';
@@ -75,6 +75,13 @@ export default async ({
         throw new Error('Unknown file type');
     }
   } catch (err) {
+    if (err.code === 'ENOENT') {
+      // This error occurs if file were deleted earlier than
+      // consumer acked the message, so just ignoring it.
+      logger.error(err.message);
+      return;
+    }
+
     await rabbit.publish('error_handling', {
       user,
       err: {
