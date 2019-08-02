@@ -265,13 +265,17 @@ Promise.all([
     await db.connect();
     logger.info('db - connection - success');
 
-    let url = app.webhookUrl;
-    if (app.env === 'development') {
-      url = await ngrok.connect(app.webhookPort);
+    // let url = app.webhookUrl;
+    // if (app.env === 'development') {
+    //   url = await ngrok.connect(app.webhookPort);
+    // }
+    // bot.telegram.setWebhook(url);
+    // bot.startWebhook('/', null, app.webhookPort);
+    if (process.env.DISABLE_WEBHOOK === 'true') {
+      await bot.telegram.deleteWebhook();
     }
-    bot.telegram.setWebhook(url);
-    bot.startWebhook('/', null, app.webhookPort);
 
+    bot.startPolling();
     logger.info('bot - online');
   })
   .catch((err: Error): void => {
