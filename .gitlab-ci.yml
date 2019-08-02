@@ -40,10 +40,10 @@ release:
   image: docker:stable
   stage: release
   variables:
-    DOCKER_HOST: tcp://docker:2375/
+    # DOCKER_HOST: tcp://docker:2375/
     DOCKER_DRIVER: overlay2
   services:
-    - docker:18-dind
+    - docker:dind
   tags:
     - docker
   script:
