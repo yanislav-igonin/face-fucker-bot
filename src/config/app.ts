@@ -8,6 +8,7 @@ interface IAppConfig {
   release: string;
   webhookUrl: string;
   webhookPort: number;
+  disableWebhook: boolean;
 }
 
 const app: IAppConfig = {
@@ -22,6 +23,7 @@ const app: IAppConfig = {
   webhookPort: process.env.WEBHOOK_PORT
     ? parseInt(process.env.WEBHOOK_PORT, 10)
     : 8000,
+  disableWebhook: process.env.DISABLE_WEBHOOK === 'true',
 };
 
 export default app;
