@@ -31,9 +31,7 @@ import videoParser from './consumers/videoParser';
 import videoCompiler from './consumers/videoCompiler';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-const bot: Telegraf<any> = new Telegraf(
-  app.botToken, { telegram: { webhookReply: false } },
-);
+const bot: Telegraf<any> = new Telegraf(app.botToken);
 
 Sentry.init({
   dsn: app.sentryDsn,
@@ -95,7 +93,7 @@ bot.on('video', async (ctx: IVideoContextMessageUpdate): Promise<void> => {
 
     const localizedMessage = localizator(user.languageCode, 'loadingFile')();
 
-    const sentMessage = await ctx.reply(localizedMessage, {
+    const sentMessage = await bot.telegram.sendMessage(user.id, localizedMessage, {
       reply_to_message_id: ctx.update.message.message_id,
     });
 
@@ -128,7 +126,7 @@ bot.on('video_note', async (ctx: IVideoNoteContextMessageUpdate): Promise<void> 
 
     const localizedMessage = localizator(user.languageCode, 'loadingFile')();
 
-    const sentMessage = await ctx.reply(localizedMessage, {
+    const sentMessage = await bot.telegram.sendMessage(user.id, localizedMessage, {
       reply_to_message_id: ctx.update.message.message_id,
     });
 
@@ -162,7 +160,7 @@ bot.on('animation', async (ctx: IAnimationContextMessageUpdate): Promise<void> =
 
     const localizedMessage = localizator(user.languageCode, 'loadingFile')();
 
-    const sentMessage = await ctx.reply(localizedMessage, {
+    const sentMessage = await bot.telegram.sendMessage(user.id, localizedMessage, {
       reply_to_message_id: ctx.update.message.message_id,
     });
 
@@ -267,18 +265,22 @@ Promise.all([
 
     if (app.disableWebhook) {
       await bot.telegram.deleteWebhook();
-      logger.debug('webhook removed');
       bot.startPolling();
     } else {
-      let url = app.webhookUrl;
+      let url: string;
       if (app.env === 'development') {
         url = await ngrok.connect(app.webhookPort);
+      } else {
+        url = app.webhookUrl;
       }
-      logger.debug('webhook url - %s', app.webhookUrl);
-      logger.debug('webhook port - %s', app.webhookPort);
-      const isWebhookSet = await bot.telegram.setWebhook(url);
-      logger.debug('webhook set - %s', isWebhookSet);
-      bot.startWebhook('/taste-my-balls', null, app.webhookPort);
+
+      // @ts-ignore
+      bot.launch({
+        webhook: {
+          domain: url,
+          port: app.webhookPort,
+        },
+      });
     }
 
     logger.info('bot - online');
