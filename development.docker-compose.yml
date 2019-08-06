@@ -11,6 +11,9 @@ services:
       - RABBIT_URL=amqp://rabbitmq
       - SENTRY_DSN=${SENTRY_DSN}
       - POSTGRES_URL=postgres://face_fucker:123456@postgres/face_fucker_bot
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_PORT=${WEBHOOK_PORT}
+      - DEBUG=${DEBUG}
     depends_on:
       - rabbitmq
     volumes:
