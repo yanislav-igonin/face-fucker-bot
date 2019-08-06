@@ -1,0 +1,87 @@
+ersion: '3.7'
+
+services:
+  app:
+    image: registry.gitlab.com/yanislav-igonin/face_fucker_bot:latest
+    networks:
+      - web
+      - test-webhook
+    environment:
+      - NODE_ENV=production
+      - BOT_TOKEN=${BOT_TOKEN}
+      - RABBIT_URL=amqp://rabbitmq
+      - SENTRY_DSN=${SENTRY_DSN}
+      - POSTGRES_URL=postgres://face_fucker:123456@postgres/face_fucker_bot
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_PORT=${WEBHOOK_PORT}
+    volumes:
+      - /root/face_fucker_bot/uploads:/usr/src/app/uploads
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 3s
+        failure_action: rollback
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        window: 10s
+      placement:
+        constraints:
+          - node.role == worker
+          - node.hostname == bots
+      labels:
+        traefik.enable: "true"
+        traefik.frontend.rule: "Host:${WEBHOOK_URL}"
+        traefik.port: ${WEBHOOK_PORT}
+
+
+  rabbitmq:
+    image: rabbitmq:alpine
+    networks:
+      - test-webhook
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 3s
+        failure_action: rollback
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        window: 10s
+      placement:
+        constraints:
+          - node.role == worker
+          - node.hostname == bots
+
+  postgres:
+    image: postgres:latest
+    networks:
+      - test-webhook
+    environment:
+      - POSTGRES_USER=face_fucker
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=face_fucker_bot
+    deploy:
+      replicas: 1
+    update_config:
+      parallelism: 1
+      delay: 3s
+      failure_action: rollback
+      order: stop-first
+    restart_policy:
+      condition: on-failure
+      window: 10s
+    placement:
+      constraints:
+        - node.role == worker
+        - node.hostname == bots
+
+networks:
+  web:
+    driver: overlay
+    external: true
+  test-webhook:
+    driver: overlay
+    attachable: true
