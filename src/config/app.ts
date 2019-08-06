@@ -13,7 +13,7 @@ interface IAppConfig {
 
 const app: IAppConfig = {
   env: process.env.NODE_ENV || 'development',
-  debug: process.env.DEBUG === 'true',
+  debug: process.env.DEBUG !== '',
   botToken: process.env.BOT_TOKEN || '',
   rabbitUrl: process.env.RABBIT_URL || 'localhost',
   dbUrl: process.env.POSTGRES_URL || 'localhost',
