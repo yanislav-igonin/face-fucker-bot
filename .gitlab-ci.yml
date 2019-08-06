@@ -88,3 +88,4 @@ deploy:
     - tags
   except:
     - /^(?!master).+@/
+  when: manual

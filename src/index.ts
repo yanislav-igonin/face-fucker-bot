@@ -267,14 +267,18 @@ Promise.all([
 
     if (app.disableWebhook) {
       await bot.telegram.deleteWebhook();
+      logger.debug('webhook removed');
       bot.startPolling();
     } else {
       let url = app.webhookUrl;
       if (app.env === 'development') {
         url = await ngrok.connect(app.webhookPort);
       }
-      bot.telegram.setWebhook(url);
-      bot.startWebhook('/', null, app.webhookPort);
+      logger.debug('webhook url - %s', app.webhookUrl);
+      logger.debug('webhook port - %s', app.webhookPort);
+      const isWebhookSet = await bot.telegram.setWebhook(url);
+      logger.debug('webhook set - %s', isWebhookSet);
+      bot.startWebhook('/taste-my-balls', null, app.webhookPort);
     }
 
     logger.info('bot - online');
