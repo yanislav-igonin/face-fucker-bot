@@ -113,8 +113,6 @@ const processVideoImage = async ({
     (framesDone / framesCount) * 10000,
   ) / 100;
 
-  logger.debug(`frames done: ${framesDone}/${framesCount} - progress: ${
-    progress}% - source: ${sourceVideoFile}`);
   if (framesDone !== framesCount && framesDone % 3 === 1) {
     await rabbit.publish('notificating', {
       user,
@@ -128,7 +126,6 @@ const processVideoImage = async ({
   }
 
   if (framesDone === framesCount) {
-    logger.debug(`source done: ${sourceVideoFile}`);
     await rabbit.publish('video_compiling', {
       user,
       messageId,
