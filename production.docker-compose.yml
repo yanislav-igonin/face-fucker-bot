@@ -32,7 +32,7 @@ services:
           - node.hostname == bots
       labels:
         traefik.enable: "true"
-        traefik.frontend.rule: "Host:${WEBHOOK_URL}"
+        traefik.frontend.rule: "Host:${WEBHOOK_URL};PathPrefix:/bots"
         traefik.port: ${WEBHOOK_PORT}
 
 networks:
