@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import crypto from 'crypto';
 import Telegraf from 'telegraf';
 import fs from 'fs-extra';
 import * as Sentry from '@sentry/node';
@@ -274,10 +275,13 @@ Promise.all([
         url = app.webhookUrl;
       }
 
+      const hookPath = `/bots/telegraf/${crypto.randomBytes(32).toString('hex')}`;
+
       // @ts-ignore
       bot.launch({
         webhook: {
           domain: url,
+          hookPath,
           port: app.webhookPort,
         },
       });
