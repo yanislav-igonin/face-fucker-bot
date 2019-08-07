@@ -23,5 +23,5 @@ export default class File {
   /* eslint-disable @typescript-eslint/no-unused-vars */
   @ManyToOne((type) => User, (user) => user.files)
   @JoinColumn({ name: 'user_id' })
-  public user!: User
+  public user!: User;
 }
