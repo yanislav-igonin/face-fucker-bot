@@ -2,7 +2,7 @@ import path from 'path';
 
 import { User } from '../../modules/db/entities';
 import processImage from './processImage';
-import { localizator, rabbit, logger } from '../../modules';
+import { localizator, rabbit } from '../../modules';
 import { fileType, processFactor, folders } from '../../config';
 import { random, files } from '../../helpers';
 
