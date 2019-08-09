@@ -8,8 +8,8 @@ const connection = connectionManager.create({
   type: 'postgres',
   url: app.dbUrl,
   entities: [File, User],
-  logging: app.debug,
-  synchronize: false,
+  logging: app.dbLog,
+  synchronize: app.dbSync,
   extra: {
     max: 5,
   },
