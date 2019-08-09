@@ -1,9 +1,10 @@
 interface IAppConfig {
   env: string;
-  debug: boolean;
   botToken: string;
   rabbitUrl: string;
   dbUrl: string;
+  dbLog: boolean;
+  dbSync: boolean;
   sentryDsn: string;
   release: string;
   webhookUrl: string;
@@ -13,10 +14,11 @@ interface IAppConfig {
 
 const app: IAppConfig = {
   env: process.env.NODE_ENV || 'development',
-  debug: process.env.DEBUG !== '',
   botToken: process.env.BOT_TOKEN || '',
   rabbitUrl: process.env.RABBIT_URL || 'localhost',
   dbUrl: process.env.POSTGRES_URL || 'localhost',
+  dbLog: process.env.DATABASE_LOG === 'true',
+  dbSync: process.env.DATABASE_SYNC === 'true',
   sentryDsn: process.env.SENTRY_DSN || '',
   release: process.env.CI_COMMIT_TAG || 'development',
   webhookUrl: process.env.WEBHOOK_URL || '',
