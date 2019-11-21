@@ -16,7 +16,7 @@ services:
       - WEBHOOK_URL=${WEBHOOK_URL}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
       - DEBUG=${DEBUG}
-      - DISABLE_WEBHOOK=false
+      - DISABLE_WEBHOOK={DISABLE_WEBHOOK}
     depends_on:
       - rabbitmq
     volumes:
