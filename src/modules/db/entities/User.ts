@@ -29,7 +29,6 @@ export default class User {
   public createdAt!: Date;
 
   /* eslint-disable @typescript-eslint/explicit-function-return-type */
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  @OneToMany((type) => File, (file) => file.user, { onDelete: 'CASCADE' })
+  @OneToMany(() => File, (file) => file.user, { onDelete: 'CASCADE' })
   public files!: File[];
 }

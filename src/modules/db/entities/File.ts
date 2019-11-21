@@ -20,8 +20,7 @@ export default class File {
   public createdAt!: Date;
 
   /* eslint-disable @typescript-eslint/explicit-function-return-type */
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  @ManyToOne((type) => User, (user) => user.files)
+  @ManyToOne(() => User, (user) => user.files)
   @JoinColumn({ name: 'user_id' })
   public user!: User;
 }
