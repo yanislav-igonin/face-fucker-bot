@@ -18,7 +18,7 @@ services:
       - DEBUG=${DEBUG}
       - DISABLE_WEBHOOK={DISABLE_WEBHOOK}
     volumes:
-      - /root/face_fucker_bot/uploads:/usr/src/app/uploads
+      - /root/bots/face_fucker_bot/uploads:/usr/src/app/uploads
     deploy:
       replicas: 1
       update_config:
@@ -29,14 +29,14 @@ services:
       restart_policy:
         condition: on-failure
         window: 10s
-      placement:
-        constraints:
-          - node.role == worker
-          - node.hostname == bots
-      labels:
-        traefik.enable: "true"
-        traefik.frontend.rule: "Host:${WEBHOOK_URL};PathPrefix:/bots"
-        traefik.port: ${WEBHOOK_PORT}
+      # placement:
+      #   constraints:
+      #     - node.role == worker
+      #     - node.hostname == bots
+      # labels:
+      #   traefik.enable: "true"
+      #   traefik.frontend.rule: "Host:${WEBHOOK_URL};PathPrefix:/bots"
+      #   traefik.port: ${WEBHOOK_PORT}
 
 networks:
   web:
