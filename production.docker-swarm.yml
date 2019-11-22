@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  app:
+    image: registry.gitlab.com/yanislav-igonin/face_fucker_bot:latest
+    networks:
+      - web
+    environment: 
+      - NODE_ENV=production
+      - BOT_TOKEN=${BOT_TOKEN}
+      - RABBIT_URL=${RABBIT_URL}
+      - SENTRY_DSN=${SENTRY_DSN}
+      - POSTGRES_URL=${POSTGRES_URL}
+      - DATABASE_LOG=${DATABASE_LOG}
+      - DATABASE_SYNC=${DATABASE_SYNC}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_PORT=${WEBHOOK_PORT}
+      - DEBUG=${DEBUG}
+      - DISABLE_WEBHOOK={DISABLE_WEBHOOK}
+    volumes:
+      - /root/face_fucker_bot/uploads:/usr/src/app/uploads
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 3s
+        failure_action: rollback
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        window: 10s
+      placement:
+        constraints:
+          - node.role == worker
+          - node.hostname == bots
+      labels:
+        traefik.enable: "true"
+        traefik.frontend.rule: "Host:${WEBHOOK_URL};PathPrefix:/bots"
+        traefik.port: ${WEBHOOK_PORT}
+
+networks:
+  web:
+    driver: overlay
+    external: true
