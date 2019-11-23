@@ -6,4 +6,8 @@
 `BOT_TOKEN=... docker-compose -f development.docker-compose.yml up --build`
 
 ### Production
-`BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... WEBHOOK_URL=... WEBHOOK_PORT=... DISABLE_WEBHOOK=... docker stack deploy -c production.docker-compose.yml face_fucker_bot`
+#### Docker Compose
+`BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... DISABLE_WEBHOOK=true docker-compose -f production.docker-compose.yml up`
+
+#### Docker Swarm
+`BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... WEBHOOK_URL=... WEBHOOK_PORT=... DISABLE_WEBHOOK=false docker stack deploy -c production.docker-swarm.yml face_fucker_bot`
