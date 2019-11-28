@@ -288,6 +288,7 @@ Promise.all([
     }
 
     logger.info('bot - online');
+    logger.info('all systems nominal');
   })
   .catch((err: Error): void => {
     logger.error('bot - offline');
