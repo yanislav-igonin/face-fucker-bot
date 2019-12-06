@@ -73,6 +73,13 @@ export default async ({
       },
     });
 
+    await rabbit.publish('notificating', {
+      user,
+      messageId,
+      type: 'update',
+      message: localizator(user.languageCode, 'fileNotDownloaded')(),
+    });
+
     if (err.isUserError !== true) {
       throw err;
     }

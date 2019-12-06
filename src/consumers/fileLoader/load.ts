@@ -30,6 +30,16 @@ const loadTelegramFile = (
     } catch (err) {
       // Rejecting new error from here
       // to avoid stacktrace from library.
+      if (err.message === '400: Bad Request: file is too big') {
+        return reject(
+          new errors.UserError(
+            localizator(
+              user.languageCode, 'errors.telegramFileSizeExceed',
+            )(),
+          ),
+        );
+      }
+
       return reject(new Error(err.message));
     }
 
@@ -43,16 +53,6 @@ const loadTelegramFile = (
 
     const uniqueId: string = nanoid();
     const fileName = `${uniqueId}-${fileBasename}`;
-
-    if (fileInfo.file_size && fileInfo.file_size / 1048576 > 20) {
-      return reject(
-        new errors.UserError(
-          localizator(
-            user.languageCode, 'errors.telegramFileSizeExceed',
-          )(fileInfo.file_size),
-        ),
-      );
-    }
 
     const writer = await fs.createWriteStream(path.join(folder, fileName));
 
