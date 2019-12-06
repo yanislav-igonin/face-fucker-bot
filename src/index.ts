@@ -264,7 +264,7 @@ Promise.all([
     await db.connect();
     logger.info('db - connection - success');
 
-    if (app.disableWebhook) {
+    if (app.isWebhookDisabled) {
       await bot.telegram.deleteWebhook();
       bot.startPolling();
     } else {
