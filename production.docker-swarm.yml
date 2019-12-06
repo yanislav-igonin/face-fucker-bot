@@ -15,7 +15,7 @@ services:
       - DATABASE_SYNC=false
       - WEBHOOK_URL=${WEBHOOK_URL}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
-      - DISABLE_WEBHOOK=false
+      - IS_WEBHOOK_DISABLED=false
     volumes:
       - /root/face_fucker_bot/uploads:/usr/src/app/uploads
     deploy:
