@@ -30,12 +30,20 @@ services:
         window: 10s
       placement:
         constraints:
-          - node.role == worker
-          - node.hostname == bots
+          - node.role == manager
       labels:
         traefik.enable: "true"
-        traefik.frontend.rule: "Host:${WEBHOOK_URL};PathPrefix:/bots"
-        traefik.port: ${WEBHOOK_PORT}
+        traefik.docker.network: "web"
+
+        traefik.http.services.face_fucker_bot.loadbalancer.server.port: ${WEBHOOK_PORT}
+
+        traefik.http.middlewares.face_fucker_bot-stripprefix.stripprefix.prefixes: "/admin"
+
+        traefik.http.routers.face_fucker_bot-secure.entrypoints: "https"
+        traefik.http.routers.face_fucker_bot-secure.rule: "Host(`igonin.dev`) && PathPrefix(`/bots`)"
+        traefik.http.routers.face_fucker_bot-secure.tls: "true"
+        traefik.http.routers.face_fucker_bot-secure.service: "face_fucker_bot"
+        traefik.http.routers.face_fucker_bot-secure.middlewares: "face_fucker_bot-stripprefix"
 
 networks:
   web:
