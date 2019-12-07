@@ -26,13 +26,9 @@ build:
   script:
     - npm run build
   artifacts:
-      expire_in: 1 day
+      expire_in: 15 mins
       paths:
         - build
-  only:
-    - tags
-  except:
-    - /^(?!master).+@/ 
 
 
 
