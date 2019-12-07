@@ -17,7 +17,7 @@ services:
       - WEBHOOK_PORT=${WEBHOOK_PORT}
       - IS_WEBHOOK_DISABLED=false
     volumes:
-      - /root/face_fucker_bot/uploads:/usr/src/app/uploads
+      - /root/bots/face_fucker_bot/uploads:/usr/src/app/uploads
     deploy:
       replicas: 1
       update_config:
@@ -49,3 +49,9 @@ networks:
   web:
     driver: overlay
     external: true
+
+
+# BOT_TOKEN=741147314:AAFlIeR_G7KUqr7zi8JXqBevBFM6MmJ7jaI RABBIT_URL=amqp://ozhsiebb:0aT96D523YqKHnxPhMMPXHXdycwEutT1@bullfrog.rmq.cloudamqp.com/ozhsiebb SENTRY_DSN=https://7f4599163a804dfda59c4bb074a58ac0@sentry.io/1499617 POSTGRES_URL=postgres://zebbqwbt:q11h69OhNn23BXkqi4-hA3PL7_litRzP@balarama.db.elephantsql.com:5432/zebbqwbt WEBHOOK_URL=igonin.dev WEBHOOK_PORT=443 docker stack deploy -c production.docker-swarm.yml
+
+
+# BOT_TOKEN=416200399:AAFVGRT6xfin7eXfWQeYPUopvAuZA8EJ_uA RABBIT_URL=amqp://ozhsiebb:0aT96D523YqKHnxPhMMPXHXdycwEutT1@bullfrog.rmq.cloudamqp.com/ozhsiebb SENTRY_DSN=https://7f4599163a804dfda59c4bb074a58ac0@sentry.io/1499617 POSTGRES_URL=postgres://zebbqwbt:q11h69OhNn23BXkqi4-hA3PL7_litRzP@balarama.db.elephantsql.com:5432/zebbqwbt WEBHOOK_URL=igonin.dev WEBHOOK_PORT=443 docker stack deploy -c production.docker-swarm.yml
