@@ -11,3 +11,8 @@
 
 #### Docker Swarm
 `BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... WEBHOOK_URL=... WEBHOOK_PORT=... IS_WEBHOOK_DISABLED=false docker stack deploy -c production.docker-swarm.yml face_fucker_bot`
+
+##### Webhook info
+Telegram can't use subdomain like `example.example.com`, so you need to use something like `example.com/bots/...` for your webhook.
+
+Also if you using https for this domain, you need to pass `443` port for `WEBHOOK_PORT` env variable, so telegram api and traefik work together.
