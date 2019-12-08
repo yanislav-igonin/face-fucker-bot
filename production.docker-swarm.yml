@@ -37,7 +37,7 @@ services:
 
         traefik.http.services.face_fucker_bot.loadbalancer.server.port: ${WEBHOOK_PORT}
 
-        traefik.http.middlewares.face_fucker_bot-stripprefix.stripprefix.prefixes: "/admin"
+        traefik.http.middlewares.face_fucker_bot-stripprefix.stripprefix.prefixes: "/bots"
 
         traefik.http.routers.face_fucker_bot-secure.entrypoints: "https"
         traefik.http.routers.face_fucker_bot-secure.rule: "Host(`igonin.dev`) && PathPrefix(`/bots`)"
