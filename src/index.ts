@@ -275,7 +275,7 @@ Promise.all([
         url = app.webhookUrl;
       }
 
-      const hookPath = `/bots/telegraf/${crypto.randomBytes(32).toString('hex')}`;
+      const hookPath = `/bots/telegram/${crypto.randomBytes(32).toString('hex')}`;
 
       // @ts-ignore
       bot.launch({
