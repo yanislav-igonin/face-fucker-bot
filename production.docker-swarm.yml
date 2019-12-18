@@ -19,6 +19,10 @@ services:
     volumes:
       - /root/bots/face_fucker_bot/uploads:/usr/src/app/uploads
     deploy:
+      resources:
+        limits:
+          cpus: '0.90'
+          memory: 1024M
       replicas: 1
       update_config:
         parallelism: 1
