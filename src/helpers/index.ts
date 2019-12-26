@@ -1,4 +1,5 @@
 import files from './files';
+import generateWebhook from './generateWebhook';
 import random from './random';
 
-export { files, random };
+export { files, generateWebhook, random };

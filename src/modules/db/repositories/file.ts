@@ -1,13 +1,13 @@
 import db from '..';
 import { File, User } from '../entities';
 
-interface IFileData {
+interface FileData {
   type: string;
   size: number;
   user: User;
 }
 
-export const createFile = async (data: IFileData): Promise<File> => {
+export const createFile = async (data: FileData): Promise<File> => {
   const fileRepository = db.getRepository(File);
   const file = new File();
   file.type = data.type;

@@ -2,7 +2,7 @@ import compileVideo from './compileVideo';
 import { rabbit, localizator } from '../../modules';
 import { User } from '../../modules/db/entities';
 
-interface IVideoCompilerData {
+interface VideoCompilerData {
   user: User;
   type: string;
   sourceVideoFile: string;
@@ -11,7 +11,7 @@ interface IVideoCompilerData {
 
 export default async ({
   user, messageId, sourceVideoFile, type,
-}: IVideoCompilerData): Promise<void> => {
+}: VideoCompilerData): Promise<void> => {
   try {
     const compiledVideo = await compileVideo(sourceVideoFile);
 

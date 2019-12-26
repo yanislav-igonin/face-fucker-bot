@@ -1,4 +1,4 @@
-import { User as IUserData } from 'telegram-typings';
+import { User as UserData } from 'telegram-typings';
 
 import db from '..';
 import { User } from '../entities';
@@ -9,7 +9,7 @@ export const getUser = async (id: number): Promise<User | undefined> => {
   return user;
 };
 
-export const createUser = async (data: IUserData): Promise<User> => {
+export const createUser = async (data: UserData): Promise<User> => {
   const userRepository = db.getRepository(User);
   const user = new User();
   user.id = data.id;

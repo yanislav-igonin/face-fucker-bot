@@ -1,7 +1,7 @@
 import { logger, rabbit, telegram } from '../../modules';
 import { User } from '../../modules/db/entities';
 
-interface INotificatorData {
+interface NotificatorData {
   user: User;
   type: string;
   message: string;
@@ -10,11 +10,11 @@ interface INotificatorData {
 
 export default async ({
   type, user, messageId, message,
-}: INotificatorData): Promise<void> => {
+}: NotificatorData): Promise<void> => {
   try {
     if (message === undefined) {
       logger.error(
-        'MESSAGE IS UNDEFINED(type, user, messageId, message): ',
+        'message is undefined (type, user, messageId, message):',
         type,
         user,
         messageId,
@@ -48,7 +48,7 @@ export default async ({
         },
       });
     } else {
-      logger.warn('MESSAGE IS NOT MODIFIED');
+      logger.warn('message is not modified');
     }
   }
 };

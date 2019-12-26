@@ -4,14 +4,14 @@ import { app } from '../../config';
 
 const createLogger = (): Logger => {
   const logLevel = (): string => {
-    if (app.env === 'development') return 'info';
+    if (app.env === 'development') return 'debug';
 
-    return 'error';
+    return 'info';
   };
 
   return pino({
     level: logLevel(),
-    prettyPrint: app.env !== 'production',
+    prettyPrint: true,
   });
 };
 

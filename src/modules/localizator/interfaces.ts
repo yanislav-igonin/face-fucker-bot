@@ -1,11 +1,11 @@
-interface IErrorsLocaleData {
+interface ErrorsLocaleData {
   default: string;
   linkIsCorrupted(url: string): string;
   linkIsNotAnImage(url: string): string;
   telegramFileSizeExceed: string;
 }
 
-export interface ILocaleData {
+export interface LocaleData {
   start: string;
   textWithoutPictures: string;
 
@@ -18,5 +18,5 @@ export interface ILocaleData {
   enjoyVideo: string;
   fileNotDownloaded: string;
 
-  errors: IErrorsLocaleData;
+  errors: ErrorsLocaleData;
 }

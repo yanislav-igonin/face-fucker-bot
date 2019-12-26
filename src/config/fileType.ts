@@ -1,9 +1,9 @@
-interface IFileTypeConfig {
+interface FileTypeConfig {
   image: string;
   video: string;
 }
 
-const fileType: IFileTypeConfig = {
+const fileType: FileTypeConfig = {
   image: 'image',
   video: 'video',
 };
