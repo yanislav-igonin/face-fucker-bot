@@ -1,18 +1,18 @@
 import { User } from '../../modules/db/entities';
 import { localizator, logger, telegram } from '../../modules';
 
-interface IErrorEntity {
+interface ErrorEntity {
   message: string;
   stack: string;
   isUserError: boolean;
 }
 
-interface IErrorHandlerData {
+interface ErrorHandlerData {
   user: User;
-  err: IErrorEntity;
+  err: ErrorEntity;
 }
 
-export default async ({ err, user }: IErrorHandlerData): Promise<void> => {
+export default async ({ err, user }: ErrorHandlerData): Promise<void> => {
   try {
     if (user === undefined) {
       // Logging previous error to know original error cause.

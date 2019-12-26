@@ -15,14 +15,12 @@ services:
       - DATABASE_SYNC=true
       - WEBHOOK_URL=${WEBHOOK_URL}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
-      - IS_WEBHOOK_DISABLED={IS_WEBHOOK_DISABLED}
+      - IS_WEBHOOK_DISABLED=${IS_WEBHOOK_DISABLED}
     depends_on:
       - rabbitmq
     volumes:
       - ./src:/usr/src/app/src
       - ./uploads:/usr/src/app/uploads
-    ports:
-      - 9229:9229
 
   rabbitmq:
     image: rabbitmq:management-alpine
@@ -31,8 +29,6 @@ services:
 
   postgres:
     image: postgres:latest
-    ports:
-      - 5432:5432
     environment:
       - POSTGRES_USER=face_fucker
       - POSTGRES_PASSWORD=123456

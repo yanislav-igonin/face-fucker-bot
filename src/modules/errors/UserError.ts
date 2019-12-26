@@ -1,9 +1,9 @@
-interface IUserError {
+interface UserError {
   name: string;
   isUserError: boolean;
 }
 
-class UserError extends Error implements IUserError {
+class CustomUserError extends Error implements UserError {
   public isUserError: boolean;
 
   public constructor(message: string) {
@@ -17,4 +17,4 @@ class UserError extends Error implements IUserError {
   }
 }
 
-export default UserError;
+export default CustomUserError;

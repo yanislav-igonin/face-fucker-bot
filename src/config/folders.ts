@@ -1,6 +1,6 @@
 import path from 'path';
 
-interface IFoldersConfig {
+interface FoldersConfig {
   imageUploads: string;
   imageProcessed: string;
   videoUploads: string;
@@ -9,7 +9,7 @@ interface IFoldersConfig {
   videoProcessedFrames: string;
 }
 
-const folders: IFoldersConfig = {
+const folders: FoldersConfig = {
   imageUploads: path.join(__dirname, '../../uploads/images/uploaded'),
   imageProcessed: path.join(__dirname, '../../uploads/images/processed'),
   videoUploads: path.join(__dirname, '../../uploads/videos/uploaded'),

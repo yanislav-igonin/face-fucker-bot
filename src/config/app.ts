@@ -1,4 +1,4 @@
-interface IAppConfig {
+interface AppConfig {
   env: string;
   botToken: string;
   rabbitUrl: string;
@@ -12,7 +12,7 @@ interface IAppConfig {
   isWebhookDisabled: boolean;
 }
 
-const app: IAppConfig = {
+const app: AppConfig = {
   env: process.env.NODE_ENV || 'development',
   botToken: process.env.BOT_TOKEN || '',
   rabbitUrl: process.env.RABBIT_URL || 'localhost',

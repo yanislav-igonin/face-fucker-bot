@@ -1,6 +1,6 @@
-import { ILocaleData } from '../interfaces';
+import { LocaleData } from '../interfaces';
 
-const locale: ILocaleData = {
+const locale: LocaleData = {
   start: 'Приветствую! Получи зашакаленное лицо буквально за пару секунд!\n\n'
     + '1) Кидаешь фотку, видос или ссылку на картинку\n2) ...\n3) PROFIT!',
   textWithoutPictures: 'Хватит болтать! Отошли мне картинок, дорогуша',

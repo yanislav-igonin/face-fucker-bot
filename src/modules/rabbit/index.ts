@@ -3,7 +3,7 @@ import amqplib, { Connection, Channel } from 'amqplib';
 import { app } from '../../config';
 import logger from '../logger';
 
-interface IRabbit {
+interface Rabbit {
   connectionUrl: string;
   connection: Connection | null;
   connect(): Promise<void | Function>;
@@ -12,7 +12,7 @@ interface IRabbit {
   publish(queueName: string, data: object): Promise<void>;
 }
 
-class Rabbit implements IRabbit {
+class RabbitConnection implements Rabbit {
   public connectionUrl: string;
 
   public connection: Connection | null;
@@ -106,6 +106,6 @@ class Rabbit implements IRabbit {
   }
 }
 
-const rabbit = new Rabbit(app.rabbitUrl);
+const rabbit = new RabbitConnection(app.rabbitUrl);
 
 export default rabbit;

@@ -5,7 +5,7 @@ import { User } from '../../modules/db/entities';
 import { files } from '../../helpers';
 import { fileType, folders } from '../../config';
 
-interface IFileCleanerData {
+interface FileCleanerData {
   user: User;
   type: string;
   sourceImageFile: string;
@@ -13,7 +13,7 @@ interface IFileCleanerData {
   sourceVideoFile?: string;
   processedVideoFile?: string;
 }
-interface IClearVideoFileData {
+interface ClearVideoFileData {
   sourceVideoFile: string;
   processedVideoFile: string;
 }
@@ -21,7 +21,7 @@ interface IClearVideoFileData {
 const clearVideoFile = async ({
   sourceVideoFile,
   processedVideoFile,
-}: IClearVideoFileData): Promise<void[]> => {
+}: ClearVideoFileData): Promise<void[]> => {
   const sourceVideoFrames = await files.readDirByPattern(
     folders.videoSourceFrames,
     path.basename(sourceVideoFile, '.mp4'),
@@ -53,7 +53,7 @@ export default async ({
   processedImageFile,
   sourceVideoFile,
   processedVideoFile,
-}: IFileCleanerData): Promise<void> => {
+}: FileCleanerData): Promise<void> => {
   try {
     switch (type) {
       case fileType.image:

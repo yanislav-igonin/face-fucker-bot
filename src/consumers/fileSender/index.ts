@@ -2,7 +2,7 @@ import { User } from '../../modules/db/entities';
 import { rabbit, telegram, localizator } from '../../modules';
 import { fileType } from '../../config';
 
-interface IFileSenderData {
+interface FileSenderData {
   user: User;
   type: string;
   sourceImageFile: string;
@@ -15,7 +15,7 @@ interface IFileSenderData {
 export default async ({
   user, type, sourceImageFile, processedImageFile,
   sourceVideoFile, processedVideoFile, messageId,
-}: IFileSenderData): Promise<void> => {
+}: FileSenderData): Promise<void> => {
   try {
     switch (type) {
       case fileType.image:

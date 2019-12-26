@@ -9,14 +9,14 @@ import { files } from '../../helpers';
 import { fileType } from '../../config';
 import { User } from '../../modules/db/entities';
 
-export interface ILoadFileResult {
+export interface LoadFileResult {
   size: number;
   path: string;
 }
 
 const loadTelegramFile = (
   fileId: string, type: string, user: User,
-): Promise<ILoadFileResult> =>
+): Promise<LoadFileResult> =>
   new Promise(async (resolve, reject): Promise<void> => {
     const folder: string = files.choseFolderForType(type);
 
@@ -24,7 +24,7 @@ const loadTelegramFile = (
     let fileLink: string;
 
     try {
-      // @ts-ignore
+      // @ts-ignore // 'getFile' does not exist, bad typings
       fileInfo = await telegram.getFile(fileId);
       fileLink = await telegram.getFileLink(fileId);
     } catch (err) {
@@ -80,7 +80,7 @@ const loadTelegramFile = (
     }));
   });
 
-const loadUrlFile = (url: string, user: User): Promise<ILoadFileResult> =>
+const loadUrlFile = (url: string, user: User): Promise<LoadFileResult> =>
   new Promise(async (resolve, reject): Promise<void> => {
     let responseContentType;
 

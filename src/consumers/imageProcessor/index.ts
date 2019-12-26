@@ -9,17 +9,17 @@ import { random, files } from '../../helpers';
 const liquifyVideoFactorCache = new Map();
 const framesDoneCache = new Map();
 
-interface IProcessSingleImageData {
+interface ProcessSingleImageData {
   user: User;
   type: string;
   sourceImageFile: string;
 }
-interface IProcessVideoImageData extends IProcessSingleImageData {
+interface ProcessVideoImageData extends ProcessSingleImageData {
   sourceVideoFile: string;
   framesCount: number;
   messageId: number;
 }
-interface IImageProcessorData extends IProcessSingleImageData {
+interface ImageProcessorData extends ProcessSingleImageData {
   sourceVideoFile?: string;
   framesCount?: number;
   messageId?: number;
@@ -29,7 +29,7 @@ const processSingleImage = async ({
   user,
   sourceImageFile,
   type,
-}: IProcessSingleImageData): Promise<void> => {
+}: ProcessSingleImageData): Promise<void> => {
   const frameFactor = {
     x: random(
       processFactor.min + processFactor.shift,
@@ -62,7 +62,7 @@ const processVideoImage = async ({
   user,
   messageId,
   framesCount,
-}: IProcessVideoImageData): Promise<void> => {
+}: ProcessVideoImageData): Promise<void> => {
   if (!framesDoneCache.has(sourceVideoFile)) {
     const framesAlreadyDone = await files.readDirByPattern(
       folders.videoProcessedFrames,
@@ -152,7 +152,7 @@ export default async ({
   sourceVideoFile,
   framesCount,
   messageId,
-}: IImageProcessorData): Promise<void> => {
+}: ImageProcessorData): Promise<void> => {
   try {
     switch (type) {
       case fileType.image:

@@ -2,7 +2,7 @@ import parseVideo from './parseVideo';
 import { localizator, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';
 
-interface IVideoParserData {
+interface VideoParserData {
   user: User;
   type: string;
   sourceVideoFile: string;
@@ -11,7 +11,7 @@ interface IVideoParserData {
 
 export default async ({
   user, messageId, sourceVideoFile, type,
-}: IVideoParserData): Promise<void> => {
+}: VideoParserData): Promise<void> => {
   try {
     const parsedImageFiles = await parseVideo(sourceVideoFile);
 

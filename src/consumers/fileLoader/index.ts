@@ -5,12 +5,12 @@ import { fileRepository } from '../../modules/db/repositories';
 import {
   loadTelegramFile,
   loadUrlFile,
-  ILoadFileResult,
+  LoadFileResult,
 } from './load';
 
 import { fileType } from '../../config';
 
-interface IFileLoaderData {
+interface FileLoaderData {
   user: User;
   type: string;
   fileId?: string;
@@ -24,9 +24,9 @@ export default async ({
   url,
   user,
   messageId,
-}: IFileLoaderData): Promise<void> => {
+}: FileLoaderData): Promise<void> => {
   try {
-    let sourceFile!: ILoadFileResult;
+    let sourceFile!: LoadFileResult;
 
     if (fileId) {
       sourceFile = await loadTelegramFile(fileId, type, user);
