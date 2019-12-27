@@ -1,27 +1,31 @@
 import { Message } from 'telegram-typings';
-import { UserContextMessageUpdate } from '../modules/telegram/interfaces';
-import { User } from '../modules/db/entities';
+import { PhotoContextMessageUpdate } from '../modules/telegram/interfaces';
 import { userRepository } from '../modules/db/repositories';
-import { localizator, rabbit, telegram } from '../modules';
+import { rabbit, localizator } from '../modules';
+import { User } from '../modules/db/entities';
 import { fileType } from '../config';
+import errors from '../modules/errors';
 
 const getFileId = (message: Message): string => {
-  if (message.animation !== undefined) return message.animation.file_id;
-  if (message.video !== undefined) return message.video.file_id;
-  if (message.video_note !== undefined) return message.video_note.file_id;
+  if (message.photo !== undefined) {
+    return message.photo[
+      message.photo.length - 1
+    ].file_id;
+  }
+
+  if (message.sticker !== undefined) return message.sticker.file_id;
 
   return '';
 };
 
 const getFileType = (message: Message): string => {
-  if (message.animation !== undefined) return fileType.animation;
-  if (message.video !== undefined) return fileType.video;
-  if (message.video_note !== undefined) return fileType.video_note;
+  if (message.photo !== undefined) return fileType.image;
+  if (message.sticker !== undefined) return fileType.sticker;
 
   return '';
 };
 
-export default async (ctx: UserContextMessageUpdate): Promise<void> => {
+export default async (ctx: PhotoContextMessageUpdate): Promise<void> => {
   let user: User | undefined;
 
   try {
@@ -30,23 +34,25 @@ export default async (ctx: UserContextMessageUpdate): Promise<void> => {
       user = await userRepository.createUser(ctx.update.message.from);
     }
 
-    const localizedMessage = localizator(user.languageCode, 'loadingFile')();
-
-    const sentMessage = await telegram.sendMessage(user.id, localizedMessage, {
-      reply_to_message_id: ctx.update.message.message_id,
-    });
-
     const type = getFileType(ctx.update.message);
     if (type === '') throw new Error('type is empty');
 
     const fileId = getFileId(ctx.update.message);
     if (fileId === '') throw new Error('fileId is empty');
 
+    // @ts-ignore `is_animated` does not exist, bad typings
+    if (type === fileType.sticker && ctx.update.message.sticker.is_animated) {
+      throw new errors.UserError(
+        localizator(
+          user.languageCode, 'errors.animatedStickersNotSupported',
+        )(),
+      );
+    }
+
     await rabbit.publish('file_loading', {
       fileId,
       type,
       user,
-      messageId: sentMessage.message_id,
     });
   } catch (err) {
     await rabbit.publish('error_handling', {

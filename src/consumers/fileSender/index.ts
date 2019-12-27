@@ -22,7 +22,13 @@ export default async ({
         await telegram.sendPhoto(user.id, { source: processedImageFile });
         break;
 
+      case fileType.sticker:
+        await telegram.sendSticker(user.id, { source: processedImageFile });
+        break;
+
       case fileType.video:
+      case fileType.video_note:
+      case fileType.animation:
         await telegram.sendVideo(user.id, { source: processedVideoFile || '' });
 
         await rabbit.publish('notificating', {

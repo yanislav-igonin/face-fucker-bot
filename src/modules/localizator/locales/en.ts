@@ -20,6 +20,7 @@ const locale: LocaleData = {
     linkIsCorrupted: (url: string): string => `Link is corrrupted: ${url}`,
     linkIsNotAnImage: (url: string): string => `Link is not an image: ${url}`,
     telegramFileSizeExceed: 'File size must be less than 20MB',
+    animatedStickersNotSupported: 'Sorry, animated stickers not supported',
   },
 };
 
