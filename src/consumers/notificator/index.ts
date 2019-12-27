@@ -28,6 +28,11 @@ export default async ({
         case 'update':
           await telegram.editMessageText(user.id, messageId, undefined, message);
           break;
+        case 'answer':
+          await telegram.sendMessage(user.id, message, {
+            reply_to_message_id: messageId,
+          });
+          break;
         default:
           throw new Error('Unknown notification type!');
       }
