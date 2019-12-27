@@ -38,6 +38,7 @@ export default async ({
 
     switch (type) {
       case fileType.image:
+      case fileType.sticker:
         await rabbit.publish('image_processing', {
           user,
           sourceImageFile: sourceFile.path,
@@ -46,6 +47,8 @@ export default async ({
         break;
 
       case fileType.video:
+      case fileType.video_note:
+      case fileType.animation:
         await rabbit.publish('video_parsing', {
           user,
           messageId,

@@ -156,6 +156,7 @@ export default async ({
   try {
     switch (type) {
       case fileType.image:
+      case fileType.sticker:
         await processSingleImage({ user, sourceImageFile, type });
         break;
 
@@ -164,6 +165,8 @@ export default async ({
       // so on `type === 'video'` we need to pass `sourceVideoFile || ''`
       // to avoid `if` checks.
       case fileType.video:
+      case fileType.video_note:
+      case fileType.animation:
         await processVideoImage({
           user,
           type,

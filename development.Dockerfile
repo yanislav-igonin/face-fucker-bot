@@ -21,6 +21,7 @@ RUN apt update -y \
     --with-openjp2 \
     --with-png \
     --with-tiff \
+    --with-webp \
     --with-quantum-depth=8 \
     --without-magick-plus-plus \
     --without-bzlib \
@@ -37,7 +38,6 @@ RUN apt update -y \
     --without-lzma \
     --without-openexr \
     --without-pango \
-    --without-webp \
     --without-x \
     --without-xml \
   && make \

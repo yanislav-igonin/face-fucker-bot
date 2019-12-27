@@ -3,6 +3,7 @@ interface ErrorsLocaleData {
   linkIsCorrupted(url: string): string;
   linkIsNotAnImage(url: string): string;
   telegramFileSizeExceed: string;
+  animatedStickersNotSupported: string;
 }
 
 export interface LocaleData {

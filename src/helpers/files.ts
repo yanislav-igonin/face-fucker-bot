@@ -21,9 +21,12 @@ const choseFolderForType = (type: string): string => {
 
   switch (type) {
     case fileType.image:
+    case fileType.sticker:
       folder = folders.imageUploads;
       break;
     case fileType.video:
+    case fileType.video_note:
+    case fileType.animation:
       folder = folders.videoUploads;
       break;
     default:

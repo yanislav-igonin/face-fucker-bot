@@ -18,14 +18,19 @@ export default (
 
     switch (type) {
       case fileType.image:
+      case fileType.sticker:
         processedImg = path.join(folders.imageProcessed, path.basename(sourceImg));
         break;
+
       case fileType.video:
+      case fileType.video_note:
+      case fileType.animation:
         processedImg = path.join(
           folders.videoProcessedFrames,
           path.basename(sourceImg),
         );
         break;
+
       default:
         processedImg = path.join(folders.imageProcessed, path.basename(sourceImg));
         break;

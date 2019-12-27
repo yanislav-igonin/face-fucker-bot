@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/node';
 import ngrok from 'ngrok';
 
 import {
-  start, photo, video, text,
+  start, image, video, text,
 } from './controllers';
 import { app, folders } from './config';
 import { db, rabbit, logger } from './modules';
@@ -37,16 +37,12 @@ bot.catch((err: Error): void => {
 });
 
 bot.start(start);
-
-bot.on('photo', photo);
-
-bot.on('video', video);
-
-bot.on('video_note', video);
-
+bot.on('photo', image);
+bot.on('sticker', image);
 // @ts-ignore // 'animation' does not exist, bad typings
 bot.on('animation', video);
-
+bot.on('video', video);
+bot.on('video_note', video);
 bot.on('text', text);
 
 Promise.all([

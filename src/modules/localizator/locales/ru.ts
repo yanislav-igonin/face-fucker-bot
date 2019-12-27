@@ -21,6 +21,7 @@ const locale: LocaleData = {
     linkIsNotAnImage: (url: string): string =>
       `Ссылка не является изображением: ${url}`,
     telegramFileSizeExceed: 'Размер файла не должен превышать 20МБ',
+    animatedStickersNotSupported: 'Извини, анимированные стикеры не поддерживаются',
   },
 };
 
