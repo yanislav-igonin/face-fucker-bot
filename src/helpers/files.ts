@@ -1,4 +1,5 @@
 import fs from 'fs-extra';
+import { Message } from 'telegram-typings';
 
 import { fileType, folders } from '../config';
 
@@ -37,9 +38,37 @@ const choseFolderForType = (type: string): string => {
   return folder;
 };
 
+const getFileIdFromMessage = (message: Message): string => {
+  if (message.animation !== undefined) return message.animation.file_id;
+  if (message.video !== undefined) return message.video.file_id;
+  if (message.video_note !== undefined) return message.video_note.file_id;
+
+  if (message.sticker !== undefined) return message.sticker.file_id;
+  if (message.photo !== undefined) {
+    return message.photo[
+      message.photo.length - 1
+    ].file_id;
+  }
+
+  return '';
+};
+
+const getFileTypeFromMessage = (message: Message): string => {
+  if (message.animation !== undefined) return fileType.animation;
+  if (message.video !== undefined) return fileType.video;
+  if (message.video_note !== undefined) return fileType.video_note;
+
+  if (message.sticker !== undefined) return fileType.sticker;
+  if (message.photo !== undefined) return fileType.image;
+
+  return '';
+};
+
 export default {
   clearFile,
   clearFiles,
   readDirByPattern,
   choseFolderForType,
+  getFileIdFromMessage,
+  getFileTypeFromMessage,
 };

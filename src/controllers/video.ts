@@ -1,25 +1,8 @@
-import { Message } from 'telegram-typings';
 import { UserContextMessageUpdate } from '../modules/telegram/interfaces';
 import { User } from '../modules/db/entities';
 import { userRepository } from '../modules/db/repositories';
 import { localizator, rabbit, telegram } from '../modules';
-import { fileType } from '../config';
-
-const getFileId = (message: Message): string => {
-  if (message.animation !== undefined) return message.animation.file_id;
-  if (message.video !== undefined) return message.video.file_id;
-  if (message.video_note !== undefined) return message.video_note.file_id;
-
-  return '';
-};
-
-const getFileType = (message: Message): string => {
-  if (message.animation !== undefined) return fileType.animation;
-  if (message.video !== undefined) return fileType.video;
-  if (message.video_note !== undefined) return fileType.video_note;
-
-  return '';
-};
+import { files } from '../helpers';
 
 export default async (ctx: UserContextMessageUpdate): Promise<void> => {
   let user: User | undefined;
@@ -36,10 +19,10 @@ export default async (ctx: UserContextMessageUpdate): Promise<void> => {
       reply_to_message_id: ctx.update.message.message_id,
     });
 
-    const type = getFileType(ctx.update.message);
+    const type = files.getFileTypeFromMessage(ctx.update.message);
     if (type === '') throw new Error('type is empty');
 
-    const fileId = getFileId(ctx.update.message);
+    const fileId = files.getFileIdFromMessage(ctx.update.message);
     if (fileId === '') throw new Error('fileId is empty');
 
     await rabbit.publish('file_loading', {

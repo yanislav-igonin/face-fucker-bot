@@ -1,31 +1,11 @@
-import { Message } from 'telegram-typings';
-import { PhotoContextMessageUpdate } from '../modules/telegram/interfaces';
+import { UserContextMessageUpdate } from '../modules/telegram/interfaces';
 import { userRepository } from '../modules/db/repositories';
-import { rabbit, localizator } from '../modules';
+import { rabbit, localizator, errors } from '../modules';
 import { User } from '../modules/db/entities';
 import { fileType } from '../config';
-import errors from '../modules/errors';
+import { files } from '../helpers';
 
-const getFileId = (message: Message): string => {
-  if (message.photo !== undefined) {
-    return message.photo[
-      message.photo.length - 1
-    ].file_id;
-  }
-
-  if (message.sticker !== undefined) return message.sticker.file_id;
-
-  return '';
-};
-
-const getFileType = (message: Message): string => {
-  if (message.photo !== undefined) return fileType.image;
-  if (message.sticker !== undefined) return fileType.sticker;
-
-  return '';
-};
-
-export default async (ctx: PhotoContextMessageUpdate): Promise<void> => {
+export default async (ctx: UserContextMessageUpdate): Promise<void> => {
   let user: User | undefined;
 
   try {
@@ -34,10 +14,10 @@ export default async (ctx: PhotoContextMessageUpdate): Promise<void> => {
       user = await userRepository.createUser(ctx.update.message.from);
     }
 
-    const type = getFileType(ctx.update.message);
+    const type = files.getFileTypeFromMessage(ctx.update.message);
     if (type === '') throw new Error('type is empty');
 
-    const fileId = getFileId(ctx.update.message);
+    const fileId = files.getFileIdFromMessage(ctx.update.message);
     if (fileId === '') throw new Error('fileId is empty');
 
     // @ts-ignore `is_animated` does not exist, bad typings
