@@ -2,6 +2,7 @@ import { userRepository } from '../../modules/db/repositories';
 import { rabbit, localizator } from '../../modules';
 import { SEND_ALL_SUBCOMMANDS, SEND_ALL_SUBCOMMANDS_LIST } from './constants';
 import CustomUserError from '../../modules/errors/UserError';
+import { app } from '../../config';
 
 export interface ExtraData {
   stickers?: string[];
@@ -55,12 +56,14 @@ export default async (subcommand: string): Promise<void> => {
 
   const users = await userRepository.getAllUsersIdsAndLanguageCodes();
 
-  users.forEach(async (user): Promise<void> => {
+  users.forEach(async (user, index): Promise<void> => {
     const localizedMessage = localizator(user.languageCode, messageKey)();
-    await rabbit.publish('mass_message_sending', {
-      user,
-      message: localizedMessage,
-      extra,
-    });
+    setTimeout(async (): Promise<void> => {
+      await rabbit.publish('mass_message_sending', {
+        user,
+        message: localizedMessage,
+        extra,
+      });
+    }, app.massMessageSenderDelay * index);
   });
 };
