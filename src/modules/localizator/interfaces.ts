@@ -6,6 +6,10 @@ interface ErrorsLocaleData {
   animatedStickersNotSupported: string;
 }
 
+interface MassMessagesData {
+  stickersSupport: string;
+}
+
 export interface LocaleData {
   start: string;
   textWithoutPictures: string;
@@ -20,4 +24,5 @@ export interface LocaleData {
   fileNotDownloaded: string;
 
   errors: ErrorsLocaleData;
+  massMessages: MassMessagesData;
 }

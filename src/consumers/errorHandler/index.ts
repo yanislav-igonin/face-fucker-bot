@@ -34,9 +34,10 @@ export default async ({ err, user }: ErrorHandlerData): Promise<void> => {
           localizator('en', 'errors.default')(),
         );
       }
-      logger.error(err);
+
+      logger.error(`user - ${user.id}; error: ${err}`);
     }
   } catch (error) {
-    logger.error(error);
+    logger.error(`user - ${user.id}; error: ${error}`);
   }
 };

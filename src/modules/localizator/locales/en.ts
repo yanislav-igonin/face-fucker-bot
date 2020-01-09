@@ -22,6 +22,16 @@ const locale: LocaleData = {
     telegramFileSizeExceed: 'File size must be less than 20MB',
     animatedStickersNotSupported: 'Sorry, animated stickers not supported',
   },
+
+  massMessages: {
+    stickersSupport: 'Hello, bro.\n'
+    + 'I\'ve made stickers support for you.\n\n'
+    + 'However, for now, animated ones are not supported'
+    + ' because of the special extension - `.tgs`'
+    + ', that should be converted to the GIF before the processing.\n'
+    + 'I\'ll try to work on it later.\n\n'
+    + '*Have fun.*',
+  },
 };
 
 export default locale;

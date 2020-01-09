@@ -4,8 +4,9 @@ import fs from 'fs-extra';
 import * as Sentry from '@sentry/node';
 import ngrok from 'ngrok';
 
+import { auth } from './middlewares';
 import {
-  start, image, video, text,
+  start, image, video, text, execute,
 } from './controllers';
 import { app, folders } from './config';
 import { db, rabbit, logger } from './modules';
@@ -20,6 +21,7 @@ import {
   notificator,
   videoParser,
   videoCompiler,
+  massMessageSender,
 } from './consumers';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
@@ -37,9 +39,9 @@ bot.catch((err: Error): void => {
 });
 
 bot.start(start);
+bot.command('execute', auth, execute);
 bot.on('photo', image);
 bot.on('sticker', image);
-// @ts-ignore // 'animation' does not exist, bad typings
 bot.on('animation', video);
 bot.on('video', video);
 bot.on('video_note', video);
@@ -65,6 +67,7 @@ Promise.all([
     rabbit.consume('file_cleaning', 0, fileCleaner),
     rabbit.consume('error_handling', 0, errorHandler),
     rabbit.consume('notificating', 0, notificator),
+    rabbit.consume('mass_message_sending', 1, massMessageSender),
   ]);
 
   await db.connect();
