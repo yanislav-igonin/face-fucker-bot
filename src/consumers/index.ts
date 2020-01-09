@@ -6,6 +6,7 @@ import imageProcessor from './imageProcessor';
 import notificator from './notificator';
 import videoParser from './videoParser';
 import videoCompiler from './videoCompiler';
+import massMessageSender from './massMessageSender';
 
 export {
   errorHandler,
@@ -16,4 +17,5 @@ export {
   notificator,
   videoParser,
   videoCompiler,
+  massMessageSender,
 };

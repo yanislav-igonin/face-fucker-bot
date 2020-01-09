@@ -21,3 +21,8 @@ export const createUser = async (data: UserData): Promise<User> => {
   await userRepository.save(user);
   return user;
 };
+
+export const getAllUsersIdsAndLanguageCodes = async (): Promise<User[]> => {
+  const userRepository = db.getRepository(User);
+  return userRepository.find({ select: ['id', 'languageCode'] });
+};
