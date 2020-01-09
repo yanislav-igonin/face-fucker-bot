@@ -14,6 +14,9 @@ const getMessageKey = (subcommand: string): string => {
     case SEND_ALL_SUBCOMMANDS.STICKERS_SUPPORT:
       messageKey = 'massMessages.stickersSupport';
       break;
+    case SEND_ALL_SUBCOMMANDS.STICKERS_SUPPORT_FIX:
+      messageKey = 'massMessages.stickersSupportFix';
+      break;
     default:
       throw new CustomUserError('Нет такой субкоманды, болван');
   }
@@ -27,7 +30,12 @@ const getExtra = (subcommand: string): { stickers?: string[] } => {
   switch (subcommand) {
     case SEND_ALL_SUBCOMMANDS.STICKERS_SUPPORT:
       extra.stickers = [
-        'CAADAgADRAQAAsDhuUgY2Ai2vp5fFBYE', 'CAADAgADoAUAAuVDuUhQP1BLtBMonRYE',
+        'CAADAgADHwAD8fNzE_MOb13TBgsKFgQ', 'CAADAgAD5wADg9DdBDJeERvO0gsrFgQ',
+      ];
+      break;
+    case SEND_ALL_SUBCOMMANDS.STICKERS_SUPPORT_FIX:
+      extra.stickers = [
+        'CAADAgADHwAD8fNzE_MOb13TBgsKFgQ', 'CAADAgAD5wADg9DdBDJeERvO0gsrFgQ',
       ];
       break;
     default:

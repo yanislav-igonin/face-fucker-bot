@@ -8,6 +8,7 @@ interface ErrorsLocaleData {
 
 interface MassMessagesData {
   stickersSupport: string;
+  stickersSupportFix: string;
 }
 
 export interface LocaleData {

@@ -35,9 +35,11 @@ export default async ({ err, user }: ErrorHandlerData): Promise<void> => {
         );
       }
 
-      logger.error(`user - ${user.id}; error: ${err}`);
+      logger.error(`user - ${user.id}`);
+      logger.error(err);
     }
   } catch (error) {
-    logger.error(`user - ${user.id}; error: ${error}`);
+    logger.error(`user - ${user.id}`);
+    logger.error(error);
   }
 };

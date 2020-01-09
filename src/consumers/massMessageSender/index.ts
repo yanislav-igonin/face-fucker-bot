@@ -17,7 +17,8 @@ export default async ({
 }: MassMessageSenderData): Promise<void> => {
   try {
     await delay(app.massMessageSenderDelay);
-    await telegram.sendMessage(user.id, message, { parse_mode: 'Markdown' });
+    // TODO: add parse_mode param from extra or message
+    await telegram.sendMessage(user.id, message, { parse_mode: 'HTML' });
 
     if (extra.stickers !== undefined) {
       const sendingStickers = extra.stickers.map(

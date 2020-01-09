@@ -25,12 +25,20 @@ const locale: LocaleData = {
 
   massMessages: {
     stickersSupport: 'Hello, bro.\n'
-    + 'I\'ve made stickers support for you.\n\n'
-    + 'However, for now, animated ones are not supported'
-    + ' because of the special extension - `.tgs`'
-    + ', that should be converted to the GIF before the processing.\n'
-    + 'I\'ll try to work on it later.\n\n'
-    + '*Have fun.*',
+      + 'I\'ve made stickers support for you.\n\n'
+      + 'However, for now, animated ones are not supported'
+      + ' because of the special extension - `.tgs`'
+      + ', that should be converted to the GIF before the processing.\n'
+      + 'I\'ll try to work on it later.\n\n'
+      + '*Have fun.*',
+    stickersSupportFix: '<i>Немного обосрался с первой рассылкой'
+      + ', братишка, прости :)</i>\n\n'
+      + 'В прошлом сообщении должны были быть зашакаленные версии стикеров'
+      + ', которые скину ниже, но кое-что пошло не так.\n\n'
+      + 'Если, вдруг, интересно, что пошло не так'
+      + ', либо есть предложения по функционалу'
+      + ', то пиши мне - @hobo_with_a_hookah.\n\n'
+      + 'PS: Было лень переводить для английской локали это сообщение.',
   },
 };
 
