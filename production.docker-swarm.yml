@@ -15,6 +15,7 @@ services:
       - DATABASE_SYNC=false
       - WEBHOOK_URL=${WEBHOOK_URL}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
+      - WEBHOOK_PATH=${WEBHOOK_PATH}
       - IS_WEBHOOK_DISABLED=false
     volumes:
       - /root/bots/face_fucker_bot/uploads:/usr/src/app/uploads
@@ -42,7 +43,7 @@ services:
         traefik.http.services.face_fucker_bot.loadbalancer.server.port: ${WEBHOOK_PORT}
 
         traefik.http.routers.face_fucker_bot-secure.entrypoints: "https"
-        traefik.http.routers.face_fucker_bot-secure.rule: "Host(`igonin.dev`) && PathPrefix(`/bots`)"
+        traefik.http.routers.face_fucker_bot-secure.rule: "Host(`${WEBHOOK_URL}`) && PathPrefix(`${WEBHOOK_PATH}`)"
         traefik.http.routers.face_fucker_bot-secure.tls: "true"
         traefik.http.routers.face_fucker_bot-secure.service: "face_fucker_bot"
 
