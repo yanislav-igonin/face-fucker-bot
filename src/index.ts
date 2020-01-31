@@ -10,7 +10,6 @@ import {
 } from './controllers';
 import { app, folders } from './config';
 import { db, rabbit, logger } from './modules';
-import { generateWebhook } from './helpers';
 
 import {
   errorHandler,
@@ -84,12 +83,10 @@ Promise.all([
       url = app.webhookUrl;
     }
 
-    const hookPath = generateWebhook();
-
-    bot.launch({
+    await bot.launch({
       webhook: {
         domain: url,
-        hookPath,
+        hookPath: app.webhookPath,
         port: app.webhookPort,
       },
     });
