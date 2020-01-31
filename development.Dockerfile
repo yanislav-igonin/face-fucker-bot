@@ -55,6 +55,5 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY package-lock.json ./
 COPY tsconfig.json ./
-COPY ./src ./src
 RUN npm i
 CMD ["npm", "run", "dev"]
