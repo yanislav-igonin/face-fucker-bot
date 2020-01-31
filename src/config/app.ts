@@ -9,6 +9,7 @@ interface AppConfig {
   release: string;
   webhookUrl: string;
   webhookPort: number;
+  webhookPath: string;
   isWebhookDisabled: boolean;
   massMessageSenderDelay: number;
 }
@@ -26,6 +27,7 @@ const app: AppConfig = {
   webhookPort: process.env.WEBHOOK_PORT
     ? parseInt(process.env.WEBHOOK_PORT, 10)
     : 8000,
+  webhookPath: process.env.WEBHOOK_PATH || '',
   isWebhookDisabled: process.env.IS_WEBHOOK_DISABLED === 'true',
   massMessageSenderDelay: process.env.MASS_MESSAGE_SENDER_DELAY
     ? parseInt(process.env.MASS_MESSAGE_SENDER_DELAY, 10)
