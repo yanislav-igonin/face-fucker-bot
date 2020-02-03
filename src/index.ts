@@ -76,16 +76,16 @@ Promise.all([
     await bot.telegram.deleteWebhook();
     bot.startPolling();
   } else {
-    let url: string;
+    let host: string;
     if (app.env === 'development') {
-      url = await ngrok.connect(app.webhookPort);
+      host = await ngrok.connect(app.webhookPort);
     } else {
-      url = app.webhookHost;
+      host = app.webhookHost;
     }
 
     await bot.launch({
       webhook: {
-        domain: url,
+        domain: host,
         hookPath: app.webhookPath,
         port: app.webhookPort,
       },
