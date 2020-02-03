@@ -80,7 +80,7 @@ Promise.all([
     if (app.env === 'development') {
       url = await ngrok.connect(app.webhookPort);
     } else {
-      url = app.webhookUrl;
+      url = app.webhookHost;
     }
 
     await bot.launch({
