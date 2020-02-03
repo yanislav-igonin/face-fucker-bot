@@ -7,7 +7,7 @@ interface AppConfig {
   dbSync: boolean;
   sentryDsn: string;
   release: string;
-  webhookUrl: string;
+  webhookHost: string;
   webhookPort: number;
   webhookPath: string;
   isWebhookDisabled: boolean;
@@ -23,7 +23,7 @@ const app: AppConfig = {
   dbSync: process.env.DATABASE_SYNC === 'true',
   sentryDsn: process.env.SENTRY_DSN || '',
   release: process.env.CI_COMMIT_TAG || 'development',
-  webhookUrl: process.env.WEBHOOK_URL || '',
+  webhookHost: process.env.WEBHOOK_HOST || '',
   webhookPort: process.env.WEBHOOK_PORT
     ? parseInt(process.env.WEBHOOK_PORT, 10)
     : 8000,

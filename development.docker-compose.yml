@@ -13,7 +13,7 @@ services:
       - POSTGRES_URL=postgres://face_fucker:123456@postgres/face_fucker_bot
       - DATABASE_LOG=false
       - DATABASE_SYNC=true
-      - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_HOST=${WEBHOOK_HOST}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
       - WEBHOOK_PATH=${WEBHOOK_PATH}
       - IS_WEBHOOK_DISABLED=${IS_WEBHOOK_DISABLED}

@@ -11,7 +11,7 @@ services:
       - POSTGRES_URL=${POSTGRES_URL}
       - DATABASE_LOG=false
       - DATABASE_SYNC=false
-      - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_HOST=${WEBHOOK_HOST}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
       - IS_WEBHOOK_DISABLED=true
     volumes:

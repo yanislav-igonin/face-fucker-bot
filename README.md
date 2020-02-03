@@ -12,7 +12,7 @@ In development you can use webhook or not to check how it works. On production i
 `BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... docker-compose -f production.docker-compose.yml up -d`
 
 #### Docker Swarm
-`BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... WEBHOOK_URL=... WEBHOOK_PORT=... docker stack deploy -c production.docker-swarm.yml face_fucker_bot`
+`BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... WEBHOOK_HOST=... WEBHOOK_PORT=... docker stack deploy -c production.docker-swarm.yml face_fucker_bot`
 
 ##### Webhook info
 Telegram can't use subdomain like `example.example.com`, so you need to use something like `example.com/bots/...` for your webhook.
