@@ -56,4 +56,4 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY tsconfig.json ./
 RUN npm i
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start:dev"]
