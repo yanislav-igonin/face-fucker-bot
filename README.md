@@ -1,7 +1,7 @@
 # Face Fucker Bot
 
 ## Try out
-[Deployed bot](t.me/face_fucker_bot)
+[Deployed bot](https://t.me/face_fucker_bot)
 
 ## Startup
 
