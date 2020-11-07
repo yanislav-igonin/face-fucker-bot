@@ -32,7 +32,7 @@ Sentry.init({
   release: app.release,
 });
 
-bot.catch((err: Error): void => {
+bot.catch((err: Error) => {
   logger.error(err);
   throw err;
 });
@@ -53,7 +53,7 @@ Promise.all([
   fs.ensureDir(folders.videoProcessed),
   fs.ensureDir(folders.videoSourceFrames),
   fs.ensureDir(folders.videoProcessedFrames),
-]).then(async (): Promise<void> => {
+]).then(async () => {
   logger.info(`release - ${app.release}`);
   await rabbit.connect();
   logger.info('rabbitmq - connection - success');
@@ -94,7 +94,7 @@ Promise.all([
 
   logger.info('bot - online');
   logger.info('all systems nominal');
-}).catch((err: Error): void => {
+}).catch((err: Error) => {
   logger.error('bot - offline');
   logger.error(err);
 });
