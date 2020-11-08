@@ -19,7 +19,6 @@ export default class File {
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   public createdAt!: Date;
 
-  /* eslint-disable @typescript-eslint/explicit-function-return-type */
   @ManyToOne(() => User, (user) => user.files)
   @JoinColumn({ name: 'user_id' })
   public user!: User;

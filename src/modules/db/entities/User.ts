@@ -28,7 +28,6 @@ export default class User {
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   public createdAt!: Date;
 
-  /* eslint-disable @typescript-eslint/explicit-function-return-type */
   @OneToMany(() => File, (file) => file.user, { onDelete: 'CASCADE' })
   public files!: File[];
 }

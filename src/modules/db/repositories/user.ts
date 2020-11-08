@@ -3,13 +3,13 @@ import { User as UserData } from 'telegram-typings';
 import db from '..';
 import { User } from '../entities';
 
-export const getUser = async (id: number): Promise<User | undefined> => {
+export const getUser = async (id: number) => {
   const userRepository = db.getRepository(User);
   const user = await userRepository.findOne(id);
   return user;
 };
 
-export const createUser = async (data: UserData): Promise<User> => {
+export const createUser = async (data: UserData) => {
   const userRepository = db.getRepository(User);
   const user = new User();
   user.id = data.id;
@@ -22,7 +22,7 @@ export const createUser = async (data: UserData): Promise<User> => {
   return user;
 };
 
-export const getAllUsersIdsAndLanguageCodes = async (): Promise<User[]> => {
+export const getAllUsersIdsAndLanguageCodes = async () => {
   const userRepository = db.getRepository(User);
   return userRepository.find({ select: ['id', 'languageCode'] });
 };
