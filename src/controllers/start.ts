@@ -1,8 +1,8 @@
-import { UserContextMessageUpdate } from '../modules/telegram/interfaces';
+import { UserContext } from '../modules/telegram/interfaces';
 import { userRepository } from '../modules/db/repositories';
 import { localizator } from '../modules';
 
-export default async (ctx: UserContextMessageUpdate): Promise<void> => {
+export default async (ctx: UserContext): Promise<void> => {
   let user = await userRepository.getUser(ctx.update.message.from.id);
   if (user === undefined) {
     user = await userRepository.createUser(ctx.update.message.from);

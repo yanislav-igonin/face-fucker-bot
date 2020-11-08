@@ -1,7 +1,7 @@
-import { UserContextMessageUpdate } from '../modules/telegram/interfaces';
+import { UserContext } from '../modules/telegram/interfaces';
 
 export default async (
-  ctx: UserContextMessageUpdate,
+  ctx: UserContext,
   next: (() => Promise<void>) | undefined,
 ): Promise<void> => {
   if (ctx.update.message.from.id !== 142166671) return;

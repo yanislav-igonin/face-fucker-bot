@@ -1,10 +1,10 @@
 import sendAll from './sendAll';
-import { TextContextMessageUpdate } from '../../modules/telegram/interfaces';
+import { TextContext } from '../../modules/telegram/interfaces';
 import { rabbit } from '../../modules';
 import { COMMANDS, COMMANDS_LIST } from './constants';
 import CustomUserError from '../../modules/errors/UserError';
 
-export default async (ctx: TextContextMessageUpdate): Promise<void> => {
+export default async (ctx: TextContext): Promise<void> => {
   try {
     const [, command, subcommand] = ctx.update.message.text.split(' ');
 

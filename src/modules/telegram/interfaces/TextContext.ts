@@ -4,7 +4,7 @@ import {
   UserMessage,
   UserUpdate,
   UserContext,
-} from './UserContextMessageUpdate';
+} from './UserContext';
 
 interface TextMessage extends UserMessage {
   entities: MessageEntity[];
@@ -15,6 +15,6 @@ interface TextUpdate extends UserUpdate {
   message: TextMessage;
 }
 
-export interface TextContextMessageUpdate extends UserContext {
+export interface TextContext extends UserContext {
   update: TextUpdate;
 }

@@ -1,5 +1,5 @@
 import { MessageEntity } from 'telegram-typings';
-import { TextContextMessageUpdate } from '../modules/telegram/interfaces';
+import { TextContext } from '../modules/telegram/interfaces';
 import { User } from '../modules/db/entities';
 import { userRepository } from '../modules/db/repositories';
 import { localizator, rabbit } from '../modules';
@@ -16,7 +16,7 @@ const cutUrlsFromText = (
     return acc;
   }, []);
 
-export default async (ctx: TextContextMessageUpdate): Promise<void> => {
+export default async (ctx: TextContext): Promise<void> => {
   if (ctx.update.message.text.includes('rick')) {
     ctx.reply('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
   }

@@ -1,10 +1,10 @@
-import { UserContextMessageUpdate } from '../modules/telegram/interfaces';
+import { UserContext } from '../modules/telegram/interfaces';
 import { User } from '../modules/db/entities';
 import { userRepository } from '../modules/db/repositories';
 import { localizator, rabbit, telegram } from '../modules';
 import { files } from '../helpers';
 
-export default async (ctx: UserContextMessageUpdate): Promise<void> => {
+export default async (ctx: UserContext): Promise<void> => {
   let user: User | undefined;
 
   try {
