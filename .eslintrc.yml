@@ -22,5 +22,6 @@ rules:
   import/no-cycle: 0
   "@typescript-eslint/lines-between-class-members": 0
   max-classes-per-file: 0
+  import/no-extraneous-dependencies: 0
 env:
   node: true
