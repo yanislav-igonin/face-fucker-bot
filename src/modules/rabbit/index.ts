@@ -1,13 +1,13 @@
-import amqplib, { Connection, Channel } from 'amqplib';
+import * as amqplib from 'amqplib';
 
 import { app } from '../../config';
 import logger from '../logger';
 
 interface Rabbit {
   connectionUrl: string;
-  connection: Connection | null;
+  connection: amqplib.Connection | null;
   connect(): Promise<void | Function>;
-  getChannel(): Promise<Channel | null>;
+  getChannel(): Promise<amqplib.Channel | null>;
   consume(queueName: string, prefetch: number, onMessage: Function): Promise<void>;
   publish(queueName: string, data: object): Promise<void>;
 }
@@ -15,7 +15,7 @@ interface Rabbit {
 class RabbitConnection implements Rabbit {
   public connectionUrl: string;
 
-  public connection: Connection | null;
+  public connection: amqplib.Connection | null;
 
   public constructor(connectionUrl: string) {
     this.connectionUrl = connectionUrl;
@@ -50,7 +50,7 @@ class RabbitConnection implements Rabbit {
     });
   }
 
-  public async getChannel(): Promise<Channel | null> {
+  public async getChannel(): Promise<amqplib.Channel | null> {
     if (!this.connection) {
       await this.connect();
     }

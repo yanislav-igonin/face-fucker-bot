@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 
 import { logger, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';

@@ -1,15 +1,16 @@
-import get from 'lodash.get';
+import * as lodash from 'lodash';
 
 import locales from './locales';
 import { LocaleData } from './interfaces';
 
+// TODO: remove return type
 export default (languageCode: string, messageKey: string): Function =>
   (prop: number | string | undefined): string | Function => {
-    const locale: LocaleData = get(locales, languageCode, undefined);
+    const locale: LocaleData = lodash.get(locales, languageCode, undefined);
 
     if (locale === undefined) {
       const defaultLocale = locales.en;
-      const message = get(defaultLocale, messageKey, undefined);
+      const message = lodash.get(defaultLocale, messageKey, undefined);
 
       if (message === undefined) {
         return defaultLocale.errors.default;
@@ -20,7 +21,7 @@ export default (languageCode: string, messageKey: string): Function =>
 
     const message: string
     | Function
-    | undefined = get(locale, messageKey, undefined);
+    | undefined = lodash.get(locale, messageKey, undefined);
 
     if (message === undefined) {
       return locale.errors.default;

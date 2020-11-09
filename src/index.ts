@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import Telegraf from 'telegraf';
-import fs from 'fs-extra';
+import * as fs from 'fs-extra';
 import * as Sentry from '@sentry/node';
-import ngrok from 'ngrok';
+import * as ngrok from 'ngrok';
 
 import { auth } from './middlewares';
 import {
