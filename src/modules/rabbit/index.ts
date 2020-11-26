@@ -13,17 +13,17 @@ interface Rabbit {
 }
 
 class RabbitConnection implements Rabbit {
-  public connectionUrl: string;
+  connectionUrl: string;
 
-  public connection: amqplib.Connection | null;
+  connection: amqplib.Connection | null;
 
-  public constructor(connectionUrl: string) {
+  constructor(connectionUrl: string) {
     this.connectionUrl = connectionUrl;
     this.connection = null;
   }
 
   /* eslint-disable-next-line consistent-return */
-  public async connect(): Promise<void | Function> {
+  async connect(): Promise<void | Function> {
     try {
       this.connection = await amqplib.connect(
         this.connectionUrl || 'amqp://localhost:5672',
@@ -50,7 +50,7 @@ class RabbitConnection implements Rabbit {
     });
   }
 
-  public async getChannel(): Promise<amqplib.Channel | null> {
+  async getChannel(): Promise<amqplib.Channel | null> {
     if (!this.connection) {
       await this.connect();
     }
@@ -68,7 +68,7 @@ class RabbitConnection implements Rabbit {
     return null;
   }
 
-  public async consume(
+  async consume(
     queueName: string,
     prefetch: number,
     onMessage: Function,
@@ -90,7 +90,7 @@ class RabbitConnection implements Rabbit {
     }
   }
 
-  public async publish(queueName: string, data: object): Promise<void> {
+  async publish(queueName: string, data: object): Promise<void> {
     const channel = await this.getChannel();
 
     if (channel !== null) {

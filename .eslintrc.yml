@@ -23,5 +23,8 @@ rules:
   "@typescript-eslint/lines-between-class-members": 0
   max-classes-per-file: 0
   import/no-extraneous-dependencies: 0
+  "@typescript-eslint/explicit-member-accessibility":
+    - error
+    - accessibility: no-public
 env:
   node: true

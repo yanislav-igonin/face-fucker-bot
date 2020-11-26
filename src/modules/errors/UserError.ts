@@ -4,9 +4,9 @@ interface UserError {
 }
 
 class CustomUserError extends Error implements UserError {
-  public isUserError: boolean;
+  isUserError: boolean;
 
-  public constructor(message: string) {
+  constructor(message: string) {
     super(message);
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, this.constructor);

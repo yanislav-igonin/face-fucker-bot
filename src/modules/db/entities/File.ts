@@ -8,18 +8,18 @@ import User from './User';
 @Entity({ name: 'files' })
 export default class File {
   @PrimaryGeneratedColumn()
-  public id!: number;
+  id!: number;
 
   @Column({ name: 'type' })
-  public type!: string;
+  type!: string;
 
   @Column({ name: 'size' })
-  public size!: number;
+  size!: number;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
-  public createdAt!: Date;
+  createdAt!: Date;
 
   @ManyToOne(() => User, (user) => user.files)
   @JoinColumn({ name: 'user_id' })
-  public user!: User;
+  user!: User;
 }
