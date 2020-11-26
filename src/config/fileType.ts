@@ -6,4 +6,4 @@ const fileType = {
   animation: 'animation',
 };
 
-export default fileType;
+export { fileType };

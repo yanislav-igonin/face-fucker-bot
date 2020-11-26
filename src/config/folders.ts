@@ -9,4 +9,4 @@ const folders = {
   videoProcessedFrames: path.join(__dirname, '../../uploads/videos/processedFrames'),
 };
 
-export default folders;
+export { folders };

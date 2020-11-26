@@ -4,4 +4,4 @@ const processFactor = {
   shift: 2,
 };
 
-export default processFactor;
+export { processFactor };

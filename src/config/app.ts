@@ -18,4 +18,4 @@ const app = {
     : 1000,
 };
 
-export default app;
+export { app };
