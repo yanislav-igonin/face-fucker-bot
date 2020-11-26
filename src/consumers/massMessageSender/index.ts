@@ -10,11 +10,11 @@ interface MassMessageSenderData {
   extra: ExtraData;
 }
 
-export default async ({
+export const massMessageSender = async ({
   user,
   message,
   extra,
-}: MassMessageSenderData): Promise<void> => {
+}: MassMessageSenderData) => {
   try {
     await delay(app.massMessageSenderDelay);
     // TODO: add parse_mode param from extra or message

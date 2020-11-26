@@ -14,6 +14,7 @@ export interface LoadFileResult {
   path: string;
 }
 
+// TODO: remove return types
 const loadTelegramFile = (
   fileId: string, type: string, user: User,
 ): Promise<LoadFileResult> =>
@@ -139,7 +140,7 @@ const loadUrlFile = (url: string, user: User): Promise<LoadFileResult> =>
 
     response.data.on('error', (err: Error): void => reject(err));
 
-    return response.data.on('end', async (): Promise<void> => {
+    return response.data.on('end', async () => {
       const { size: fileSize } = await fs.stat(path.join(folder, fileName));
 
       return resolve({

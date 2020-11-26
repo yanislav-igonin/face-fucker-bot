@@ -5,7 +5,7 @@ import { random } from '../../helpers';
 
 import { fileType, folders, processFactor } from '../../config';
 
-export default (
+export const processImage = (
   sourceImg: string,
   type: string,
   factor = {

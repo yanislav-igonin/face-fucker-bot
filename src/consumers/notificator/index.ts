@@ -8,9 +8,9 @@ interface NotificatorData {
   messageId?: number;
 }
 
-export default async ({
+export const notificator = async ({
   type, user, messageId, message,
-}: NotificatorData): Promise<void> => {
+}: NotificatorData) => {
   try {
     if (message === undefined) {
       logger.error(

@@ -12,7 +12,7 @@ interface ErrorHandlerData {
   err: ErrorEntity;
 }
 
-export default async ({ err, user }: ErrorHandlerData): Promise<void> => {
+export const errorHandler = async ({ err, user }: ErrorHandlerData) => {
   try {
     if (user === undefined) {
       // Logging previous error to know original error cause.

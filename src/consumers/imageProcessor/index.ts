@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import { User } from '../../modules/db/entities';
-import processImage from './processImage';
+import { processImage } from './processImage';
 import { localizator, rabbit } from '../../modules';
 import { fileType, processFactor, folders } from '../../config';
 import { random, files } from '../../helpers';
@@ -29,7 +29,7 @@ const processSingleImage = async ({
   user,
   sourceImageFile,
   type,
-}: ProcessSingleImageData): Promise<void> => {
+}: ProcessSingleImageData) => {
   const frameFactor = {
     x: random(
       processFactor.min + processFactor.shift,
@@ -41,7 +41,7 @@ const processSingleImage = async ({
     ),
   };
 
-  const processedImageFile: string = await processImage(
+  const processedImageFile = await processImage(
     sourceImageFile,
     type,
     frameFactor,
@@ -62,7 +62,7 @@ const processVideoImage = async ({
   user,
   messageId,
   framesCount,
-}: ProcessVideoImageData): Promise<void> => {
+}: ProcessVideoImageData) => {
   if (!framesDoneCache.has(sourceVideoFile)) {
     const framesAlreadyDone = await files.readDirByPattern(
       folders.videoProcessedFrames,
@@ -145,14 +145,14 @@ const processVideoImage = async ({
   }
 };
 
-export default async ({
+export const imageProcessor = async ({
   user,
   type,
   sourceImageFile,
   sourceVideoFile,
   framesCount,
   messageId,
-}: ImageProcessorData): Promise<void> => {
+}: ImageProcessorData) => {
   try {
     switch (type) {
       case fileType.image:

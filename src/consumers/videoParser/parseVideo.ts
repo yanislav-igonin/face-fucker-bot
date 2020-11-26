@@ -6,7 +6,7 @@ import { folders } from '../../config';
 
 const FRAME_QUALITY = 2; // 2 - 31 (31 is worst)
 
-export default async (file: string): Promise<string[]> =>
+export const parseVideo = async (file: string): Promise<string[]> =>
   new Promise((resolve, reject): void => {
     const videoFramesName = path.join(
       folders.videoSourceFrames,

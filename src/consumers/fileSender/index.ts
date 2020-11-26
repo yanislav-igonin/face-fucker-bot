@@ -12,10 +12,10 @@ interface FileSenderData {
   messageId?: number;
 }
 
-export default async ({
+export const fileSender = async ({
   user, type, sourceImageFile, processedImageFile,
   sourceVideoFile, processedVideoFile, messageId,
-}: FileSenderData): Promise<void> => {
+}: FileSenderData) => {
   try {
     switch (type) {
       case fileType.image:
