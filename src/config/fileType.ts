@@ -1,12 +1,4 @@
-interface FileTypeConfig {
-  image: string;
-  sticker: string;
-  video: string;
-  video_note: string;
-  animation: string;
-}
-
-const fileType: FileTypeConfig = {
+const fileType = {
   image: 'image',
   sticker: 'sticker',
   video: 'video',
