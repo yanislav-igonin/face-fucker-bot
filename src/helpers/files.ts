@@ -3,21 +3,21 @@ import { Message } from 'telegram-typings';
 
 import { fileType, folders } from '../config';
 
-const clearFile = (file: string): Promise<void> => fs.unlink(file);
+const clearFile = (file: string) => fs.unlink(file);
 
-const clearFiles = (files: string[]): Promise<void[]> => Promise.all(
-  files.map((file): Promise<void> => clearFile(file)),
+const clearFiles = (files: string[]) => Promise.all(
+  files.map((file) => clearFile(file)),
 );
 
 const readDirByPattern = async (
   path: string,
   pattern: string,
-): Promise<string[]> => {
+) => {
   const files = await fs.readdir(path);
-  return files.filter((file): RegExpMatchArray | null => file.match(pattern));
+  return files.filter((file) => file.match(pattern));
 };
 
-const choseFolderForType = (type: string): string => {
+const choseFolderForType = (type: string) => {
   let folder;
 
   switch (type) {
@@ -38,7 +38,7 @@ const choseFolderForType = (type: string): string => {
   return folder;
 };
 
-const getFileIdFromMessage = (message: Message): string => {
+const getFileIdFromMessage = (message: Message) => {
   if (message.animation !== undefined) return message.animation.file_id;
   if (message.video !== undefined) return message.video.file_id;
   if (message.video_note !== undefined) return message.video_note.file_id;
@@ -53,7 +53,7 @@ const getFileIdFromMessage = (message: Message): string => {
   return '';
 };
 
-const getFileTypeFromMessage = (message: Message): string => {
+const getFileTypeFromMessage = (message: Message) => {
   if (message.animation !== undefined) return fileType.animation;
   if (message.video !== undefined) return fileType.video;
   if (message.video_note !== undefined) return fileType.video_note;
@@ -64,7 +64,7 @@ const getFileTypeFromMessage = (message: Message): string => {
   return '';
 };
 
-export default {
+export {
   clearFile,
   clearFiles,
   readDirByPattern,
