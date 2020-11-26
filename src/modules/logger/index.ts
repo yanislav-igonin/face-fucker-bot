@@ -3,7 +3,7 @@ import * as pino from 'pino';
 import { app } from '../../config';
 
 const createLogger = () => {
-  const logLevel = (): string => {
+  const logLevel = () => {
     if (app.env === 'development') return 'debug';
 
     return 'info';
@@ -17,4 +17,4 @@ const createLogger = () => {
 
 const logger = createLogger();
 
-export default logger;
+export { logger };

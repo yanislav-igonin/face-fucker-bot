@@ -1,21 +1,12 @@
 import * as amqplib from 'amqplib';
 
 import { app } from '../../config';
-import logger from '../logger';
+import { logger } from '../logger';
 
-interface Rabbit {
-  connectionUrl: string;
-  connection: amqplib.Connection | null;
-  connect(): Promise<void | Function>;
-  getChannel(): Promise<amqplib.Channel | null>;
-  consume(queueName: string, prefetch: number, onMessage: Function): Promise<void>;
-  publish(queueName: string, data: object): Promise<void>;
-}
+class RabbitConnection {
+  private connectionUrl: string;
 
-class RabbitConnection implements Rabbit {
-  connectionUrl: string;
-
-  connection: amqplib.Connection | null;
+  private connection: amqplib.Connection | null;
 
   constructor(connectionUrl: string) {
     this.connectionUrl = connectionUrl;
@@ -33,7 +24,7 @@ class RabbitConnection implements Rabbit {
       return this.connect();
     }
 
-    this.connection.on('error', async (): Promise<void | Function> => {
+    this.connection.on('error', async () => {
       if (this.connection !== null) {
         this.connection.close().catch(logger.error);
       }
@@ -43,14 +34,14 @@ class RabbitConnection implements Rabbit {
       return this.connect();
     });
 
-    this.connection.on('close', (): Promise<void | Function> => {
+    this.connection.on('close', () => {
       logger.error('RabbitMQ: Connection close');
       this.connection = null;
       return this.connect();
     });
   }
 
-  async getChannel(): Promise<amqplib.Channel | null> {
+  async getChannel() {
     if (!this.connection) {
       await this.connect();
     }
@@ -58,7 +49,7 @@ class RabbitConnection implements Rabbit {
     if (this.connection !== null) {
       const channel = await this.connection.createChannel();
 
-      channel.on('error', (): void => {
+      channel.on('error', () => {
         channel.close().catch(logger.error);
       });
 
@@ -72,14 +63,14 @@ class RabbitConnection implements Rabbit {
     queueName: string,
     prefetch: number,
     onMessage: Function,
-  ): Promise<void> {
+  ) {
     const channel = await this.getChannel();
 
     if (channel !== null) {
       channel.assertQueue(queueName, { durable: true });
       channel.prefetch(prefetch);
 
-      channel.consume(queueName, async (msg): Promise<void> => {
+      channel.consume(queueName, async (msg) => {
         if (msg !== null) {
           const task = JSON.parse(msg.content.toString());
 
@@ -90,7 +81,7 @@ class RabbitConnection implements Rabbit {
     }
   }
 
-  async publish(queueName: string, data: object): Promise<void> {
+  async publish(queueName: string, data: object) {
     const channel = await this.getChannel();
 
     if (channel !== null) {
@@ -108,4 +99,4 @@ class RabbitConnection implements Rabbit {
 
 const rabbit = new RabbitConnection(app.rabbitUrl);
 
-export default rabbit;
+export { rabbit };

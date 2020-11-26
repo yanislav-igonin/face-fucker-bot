@@ -1,11 +1,10 @@
 import * as lodash from 'lodash';
 
-import locales from './locales';
+import { locales } from './locales';
 import { LocaleData } from './interfaces';
 
-// TODO: remove return type
-export default (languageCode: string, messageKey: string): Function =>
-  (prop: number | string | undefined): string | Function => {
+export const localizator = (languageCode: string, messageKey: string) =>
+  (prop?: number | string) => {
     const locale: LocaleData = lodash.get(locales, languageCode, undefined);
 
     if (locale === undefined) {

@@ -1,6 +1,6 @@
 import { User as UserData } from 'telegram-typings';
 
-import db from '..';
+import { db } from '..';
 import { User } from '../entities';
 
 export const getUser = async (id: number) => {

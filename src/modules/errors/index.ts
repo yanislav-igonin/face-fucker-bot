@@ -1,5 +1,5 @@
 import UserError from './UserError';
 
-export default {
+export {
   UserError,
 };

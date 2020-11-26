@@ -1,4 +1,4 @@
-import db from '..';
+import { db } from '..';
 import { File, User } from '../entities';
 
 interface FileData {

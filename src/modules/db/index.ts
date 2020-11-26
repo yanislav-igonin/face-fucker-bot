@@ -15,4 +15,4 @@ const connection = connectionManager.create({
   },
 });
 
-export default connection;
+export { connection as db };

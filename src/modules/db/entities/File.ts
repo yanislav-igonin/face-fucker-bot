@@ -3,10 +3,10 @@ import {
 } from 'typeorm';
 
 /* eslint-disable-next-line import/no-cycle */
-import User from './User';
+import { User } from './User';
 
 @Entity({ name: 'files' })
-export default class File {
+export class File {
   @PrimaryGeneratedColumn()
   id!: number;
 
