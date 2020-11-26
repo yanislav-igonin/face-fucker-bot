@@ -8,7 +8,7 @@ export interface ExtraData {
   stickers?: string[];
 }
 
-const getMessageKey = (subcommand: string): string => {
+const getMessageKey = (subcommand: string) => {
   let messageKey = '';
 
   switch (subcommand) {
@@ -25,7 +25,7 @@ const getMessageKey = (subcommand: string): string => {
   return messageKey;
 };
 
-const getExtra = (subcommand: string): { stickers?: string[] } => {
+const getExtra = (subcommand: string) => {
   const extra: ExtraData = {};
 
   switch (subcommand) {
@@ -46,7 +46,7 @@ const getExtra = (subcommand: string): { stickers?: string[] } => {
   return extra;
 };
 
-export default async (subcommand: string): Promise<void> => {
+export const sendAll = async (subcommand: string) => {
   if (!SEND_ALL_SUBCOMMANDS_LIST.includes(subcommand)) {
     throw new CustomUserError('Нет такой субкоманды, болван');
   }
@@ -56,9 +56,9 @@ export default async (subcommand: string): Promise<void> => {
 
   const users = await userRepository.getAllUsersIdsAndLanguageCodes();
 
-  users.forEach(async (user, index): Promise<void> => {
+  users.forEach(async (user, index) => {
     const localizedMessage = localizator(user.languageCode, messageKey)();
-    setTimeout(async (): Promise<void> => {
+    setTimeout(async () => {
       await rabbit.publish('mass_message_sending', {
         user,
         message: localizedMessage,

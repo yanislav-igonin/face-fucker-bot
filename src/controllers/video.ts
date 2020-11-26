@@ -4,7 +4,7 @@ import { userRepository } from '../modules/db/repositories';
 import { localizator, rabbit, telegram } from '../modules';
 import { files } from '../helpers';
 
-export default async (ctx: UserContext): Promise<void> => {
+export const video = async (ctx: UserContext) => {
   let user: User | undefined;
 
   try {

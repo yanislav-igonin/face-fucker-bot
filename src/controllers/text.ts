@@ -8,7 +8,7 @@ import { fileType } from '../config';
 const cutUrlsFromText = (
   urlEntities: MessageEntity[],
   text: string,
-): string[] => urlEntities
+) => urlEntities
   .reduce((acc: string[], { offset, length }): string[] => {
     const url = text.substring(offset, offset + length);
     acc.push(url);
@@ -16,7 +16,7 @@ const cutUrlsFromText = (
     return acc;
   }, []);
 
-export default async (ctx: TextContext): Promise<void> => {
+export const text = async (ctx: TextContext) => {
   if (ctx.update.message.text.includes('rick')) {
     ctx.reply('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
   }
@@ -41,11 +41,11 @@ export default async (ctx: TextContext): Promise<void> => {
       .update
       .message
       .entities
-      .filter((entity): boolean => entity.type === 'url');
+      .filter((entity) => entity.type === 'url');
 
     const urls = cutUrlsFromText(urlEntities, ctx.update.message.text);
 
-    const promises = urls.map((url): Promise<void> => rabbit
+    const promises = urls.map((url) => rabbit
       .publish('file_loading', {
         url,
         type: fileType.image,
