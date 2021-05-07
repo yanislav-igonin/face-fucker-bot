@@ -6,7 +6,7 @@ import { File } from 'telegram-typings';
 
 import { telegram, errors, localizator } from '../../modules';
 import { files } from '../../helpers';
-import { fileType } from '../../config';
+import { fileType } from '../../common/config';
 import { User } from '../../modules/db/entities';
 
 export interface LoadFileResult {

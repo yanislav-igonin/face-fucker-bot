@@ -1,6 +1,6 @@
 import amqplib, { Connection, Channel } from 'amqplib';
 
-import { app } from '../../config';
+import { app } from '../../common/config';
 import logger from '../logger';
 
 interface Rabbit {

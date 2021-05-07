@@ -1,6 +1,6 @@
 import { Telegram } from 'telegraf';
 
-import { app } from '../../config';
+import { app } from '../../common/config';
 
 const telegram = new Telegram(app.botToken, {});
 

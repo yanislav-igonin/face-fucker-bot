@@ -3,7 +3,7 @@ import path from 'path';
 
 import { random } from '../../helpers';
 
-import { fileType, folders, processFactor } from '../../config';
+import { fileType, folders, processFactor } from '../../common/config';
 
 export default (
   sourceImg: string,

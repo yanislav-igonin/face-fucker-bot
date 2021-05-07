@@ -1,6 +1,6 @@
 import { getConnectionManager } from 'typeorm';
 
-import { app } from '../../config';
+import { app } from '../../common/config';
 import { File, User } from './entities';
 
 const connectionManager = getConnectionManager();

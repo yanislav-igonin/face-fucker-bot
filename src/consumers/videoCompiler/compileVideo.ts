@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
 
-import { folders } from '../../config';
+import { folders } from '../../common/config';
 
 export default (sourceVideoFile: string): Promise<string> =>
   new Promise((resolve, reject): void => {

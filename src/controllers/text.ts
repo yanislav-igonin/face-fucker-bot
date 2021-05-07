@@ -3,7 +3,7 @@ import { TextContextMessageUpdate } from '../modules/telegram/interfaces';
 import { User } from '../modules/db/entities';
 import { userRepository } from '../modules/db/repositories';
 import { localizator, rabbit } from '../modules';
-import { fileType } from '../config';
+import { fileType } from '../common/config';
 
 const cutUrlsFromText = (
   urlEntities: MessageEntity[],

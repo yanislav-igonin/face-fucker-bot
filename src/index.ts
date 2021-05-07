@@ -8,7 +8,7 @@ import { auth } from './middlewares';
 import {
   start, image, video, text, execute,
 } from './controllers';
-import { app, folders } from './config';
+import { app, folders } from './common/config';
 import { db, rabbit, logger } from './modules';
 
 import {

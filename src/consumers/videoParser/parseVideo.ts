@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import path from 'path';
 
 import { files } from '../../helpers';
-import { folders } from '../../config';
+import { folders } from '../../common/config';
 
 const FRAME_QUALITY = 2; // 2 - 31 (31 is worst)
 

@@ -1,6 +1,6 @@
 import pino, { Logger } from 'pino';
 
-import { app } from '../../config';
+import { app } from '../../common/config';
 
 const createLogger = (): Logger => {
   const logLevel = (): string => {

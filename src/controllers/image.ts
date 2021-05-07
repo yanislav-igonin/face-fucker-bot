@@ -2,7 +2,7 @@ import { UserContextMessageUpdate } from '../modules/telegram/interfaces';
 import { userRepository } from '../modules/db/repositories';
 import { rabbit, localizator } from '../modules';
 import { User } from '../modules/db/entities';
-import { fileType } from '../config';
+import { fileType } from '../common/config';
 import { files } from '../helpers';
 
 export default async (ctx: UserContextMessageUpdate): Promise<void> => {
