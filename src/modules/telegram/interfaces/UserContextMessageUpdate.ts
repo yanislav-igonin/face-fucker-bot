@@ -1,4 +1,4 @@
-import { ContextMessageUpdate } from 'telegraf';
+import { Context } from 'telegraf';
 import {
   Message, Update, User,
 } from 'telegram-typings';
@@ -11,6 +11,6 @@ export interface UserUpdate extends Update {
   message: UserMessage;
 }
 
-export interface UserContextMessageUpdate extends ContextMessageUpdate {
+export interface UserContextMessageUpdate extends Context {
   update: UserUpdate;
 }
