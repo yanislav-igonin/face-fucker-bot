@@ -1,13 +1,13 @@
-FROM node:10
+FROM node:14
 
 ENV MAGICK_URL "https://imagemagick.org/download/releases"
-ENV MAGICK_VERSION 6.9.1-10
+ENV MAGICK_VERSION 7.0.11-11
 
-RUN apt update -y \
-  && apt install -y --no-install-recommends \
-    libpng-dev libjpeg-dev libtiff-dev liblqr-dev \
-  && apt remove -y imagemagick \
-  && cd /tmp \
+RUN apt-get dist-upgrade -y --allow-unauthenticated
+RUN apt update -y
+RUN apt install -y --no-install-recommends libpng-dev libjpeg-dev libtiff-dev liblqr-dev
+RUN apt remove -y imagemagick
+RUN cd /tmp \
   && curl -SLO "${MAGICK_URL}/ImageMagick-${MAGICK_VERSION}.tar.xz" \
   && curl -SLO "${MAGICK_URL}/ImageMagick-${MAGICK_VERSION}.tar.xz.asc" \
   && tar xf "ImageMagick-${MAGICK_VERSION}.tar.xz" \
