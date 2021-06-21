@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 
 import { logger, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';
@@ -21,13 +21,13 @@ interface ClearVideoFileData {
 const clearVideoFile = async ({
   sourceVideoFile,
   processedVideoFile,
-}: ClearVideoFileData): Promise<void[]> => {
+}: ClearVideoFileData) => {
   const sourceVideoFrames = await files.readDirByPattern(
     folders.videoSourceFrames,
     path.basename(sourceVideoFile, '.mp4'),
   );
 
-  const sourceFullPathVideoFrames = sourceVideoFrames.map((file): string =>
+  const sourceFullPathVideoFrames = sourceVideoFrames.map((file) =>
     path.join(folders.videoSourceFrames, file));
 
   const processedVideoFrames = await files.readDirByPattern(
@@ -35,7 +35,7 @@ const clearVideoFile = async ({
     path.basename(sourceVideoFile, '.mp4'),
   );
 
-  const processedFullPathVideoFrames = processedVideoFrames.map((file): string =>
+  const processedFullPathVideoFrames = processedVideoFrames.map((file) =>
     path.join(folders.videoProcessedFrames, file));
 
   return files.clearFiles([
@@ -46,14 +46,14 @@ const clearVideoFile = async ({
   ]);
 };
 
-export default async ({
+export const fileCleaner = async ({
   user,
   type,
   sourceImageFile,
   processedImageFile,
   sourceVideoFile,
   processedVideoFile,
-}: FileCleanerData): Promise<void> => {
+}: FileCleanerData) => {
   try {
     switch (type) {
       case fileType.image:

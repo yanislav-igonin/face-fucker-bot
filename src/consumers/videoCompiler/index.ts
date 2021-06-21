@@ -1,4 +1,4 @@
-import compileVideo from './compileVideo';
+import { compileVideo } from './compileVideo';
 import { rabbit, localizator } from '../../modules';
 import { User } from '../../modules/db/entities';
 
@@ -9,9 +9,9 @@ interface VideoCompilerData {
   messageId: number;
 }
 
-export default async ({
+export const videoCompiler = async ({
   user, messageId, sourceVideoFile, type,
-}: VideoCompilerData): Promise<void> => {
+}: VideoCompilerData) => {
   try {
     const compiledVideo = await compileVideo(sourceVideoFile);
 

@@ -3,8 +3,8 @@ import { MessageEntity } from 'telegram-typings';
 import {
   UserMessage,
   UserUpdate,
-  UserContextMessageUpdate,
-} from './UserContextMessageUpdate';
+  UserContext,
+} from './UserContext';
 
 interface TextMessage extends UserMessage {
   entities: MessageEntity[];
@@ -15,6 +15,6 @@ interface TextUpdate extends UserUpdate {
   message: TextMessage;
 }
 
-export interface TextContextMessageUpdate extends UserContextMessageUpdate {
+export interface TextContext extends UserContext {
   update: TextUpdate;
 }

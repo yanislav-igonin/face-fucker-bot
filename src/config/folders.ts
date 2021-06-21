@@ -1,15 +1,6 @@
-import path from 'path';
+import * as path from 'path';
 
-interface FoldersConfig {
-  imageUploads: string;
-  imageProcessed: string;
-  videoUploads: string;
-  videoProcessed: string;
-  videoSourceFrames: string;
-  videoProcessedFrames: string;
-}
-
-const folders: FoldersConfig = {
+const folders = {
   imageUploads: path.join(__dirname, '../../uploads/images/uploaded'),
   imageProcessed: path.join(__dirname, '../../uploads/images/processed'),
   videoUploads: path.join(__dirname, '../../uploads/videos/uploaded'),
@@ -18,4 +9,4 @@ const folders: FoldersConfig = {
   videoProcessedFrames: path.join(__dirname, '../../uploads/videos/processedFrames'),
 };
 
-export default folders;
+export { folders };

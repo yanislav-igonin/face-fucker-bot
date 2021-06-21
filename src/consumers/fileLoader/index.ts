@@ -18,13 +18,13 @@ interface FileLoaderData {
   messageId?: number;
 }
 
-export default async ({
+export const fileLoader = async ({
   type,
   fileId,
   url,
   user,
   messageId,
-}: FileLoaderData): Promise<void> => {
+}: FileLoaderData) => {
   try {
     let sourceFile!: LoadFileResult;
 

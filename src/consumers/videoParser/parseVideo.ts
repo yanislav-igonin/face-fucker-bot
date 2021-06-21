@@ -1,12 +1,12 @@
 import { spawn } from 'child_process';
-import path from 'path';
+import * as path from 'path';
 
 import { files } from '../../helpers';
 import { folders } from '../../config';
 
 const FRAME_QUALITY = 2; // 2 - 31 (31 is worst)
 
-export default async (file: string): Promise<string[]> =>
+export const parseVideo = async (file: string): Promise<string[]> =>
   new Promise((resolve, reject): void => {
     const videoFramesName = path.join(
       folders.videoSourceFrames,
@@ -24,13 +24,13 @@ export default async (file: string): Promise<string[]> =>
       `${videoFramesName}-frame-%04d.jpg`,
     ]);
 
-    videoConverterToImages.on('error', (err: Error): void => reject(err));
+    videoConverterToImages.on('error', (err) => reject(err));
 
-    videoConverterToImages.on('exit', async (): Promise<void> => {
+    videoConverterToImages.on('exit', async () => {
       const parsedFiles = await files
         .readDirByPattern(folders.videoSourceFrames, path.basename(file, '.mp4'));
 
-      const parsedFilesFullPaths = parsedFiles.map((parsedFile): string =>
+      const parsedFilesFullPaths = parsedFiles.map((parsedFile) =>
         path.join(folders.videoSourceFrames, parsedFile));
 
       return resolve(parsedFilesFullPaths);

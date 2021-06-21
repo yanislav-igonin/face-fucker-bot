@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import fs from 'fs-extra';
-import path from 'path';
-import nanoid from 'nanoid';
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import { v4 as uuid } from 'uuid';
 import { File } from 'telegram-typings';
 
 import { telegram, errors, localizator } from '../../modules';
@@ -14,6 +14,7 @@ export interface LoadFileResult {
   path: string;
 }
 
+// TODO: remove return types
 const loadTelegramFile = (
   fileId: string, type: string, user: User,
 ): Promise<LoadFileResult> =>
@@ -51,7 +52,7 @@ const loadTelegramFile = (
       return reject(new Error('File doesn\'t exist'));
     }
 
-    const uniqueId: string = nanoid();
+    const uniqueId: string = uuid();
     const fileName = `${uniqueId}-${fileBasename}`;
 
     const writer = await fs.createWriteStream(path.join(folder, fileName));
@@ -113,7 +114,7 @@ const loadUrlFile = (url: string, user: User): Promise<LoadFileResult> =>
     }
 
     const fileBasename = path.basename(url).split('?')[0];
-    const uniqueId = nanoid();
+    const uniqueId = uuid();
     const fileName = `${uniqueId}-${fileBasename}`;
     const folder = files.choseFolderForType(fileType.image);
     const filePath = path.join(folder, fileName);
@@ -139,7 +140,7 @@ const loadUrlFile = (url: string, user: User): Promise<LoadFileResult> =>
 
     response.data.on('error', (err: Error): void => reject(err));
 
-    return response.data.on('end', async (): Promise<void> => {
+    return response.data.on('end', async () => {
       const { size: fileSize } = await fs.stat(path.join(folder, fileName));
 
       return resolve({

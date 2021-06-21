@@ -3,32 +3,31 @@ import {
 } from 'typeorm';
 
 /* eslint-disable-next-line import/no-cycle */
-import File from './File';
+import { File } from './File';
 
 @Entity({ name: 'users' })
-export default class User {
+export class User {
   @PrimaryColumn({ unique: true })
-  public id!: number;
+  id!: number;
 
   @Column({ name: 'is_bot', default: false })
-  public isBot!: boolean;
+  isBot!: boolean;
 
   @Column({ name: 'first_name', default: '' })
-  public firstName!: string;
+  firstName!: string;
 
   @Column({ name: 'last_name', default: '' })
-  public lastName!: string;
+  lastName!: string;
 
   @Column({ default: '' })
-  public username!: string;
+  username!: string;
 
   @Column({ name: 'language_code', default: 'en' })
-  public languageCode!: string;
+  languageCode!: string;
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
-  public createdAt!: Date;
+  createdAt!: Date;
 
-  /* eslint-disable @typescript-eslint/explicit-function-return-type */
   @OneToMany(() => File, (file) => file.user, { onDelete: 'CASCADE' })
-  public files!: File[];
+  files!: File[];
 }

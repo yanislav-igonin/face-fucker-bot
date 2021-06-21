@@ -1,20 +1,4 @@
-interface AppConfig {
-  env: string;
-  botToken: string;
-  rabbitUrl: string;
-  dbUrl: string;
-  dbLog: boolean;
-  dbSync: boolean;
-  sentryDsn: string;
-  release: string;
-  webhookHost: string;
-  webhookPort: number;
-  webhookPath: string;
-  isWebhookDisabled: boolean;
-  massMessageSenderDelay: number;
-}
-
-const app: AppConfig = {
+const app = {
   env: process.env.NODE_ENV || 'development',
   botToken: process.env.BOT_TOKEN || '',
   rabbitUrl: process.env.RABBIT_URL || 'localhost',
@@ -34,4 +18,4 @@ const app: AppConfig = {
     : 1000,
 };
 
-export default app;
+export { app };

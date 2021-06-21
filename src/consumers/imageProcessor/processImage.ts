@@ -1,18 +1,18 @@
 import { spawn } from 'child_process';
-import path from 'path';
+import * as path from 'path';
 
 import { random } from '../../helpers';
 
 import { fileType, folders, processFactor } from '../../config';
 
-export default (
+export const processImage = (
   sourceImg: string,
   type: string,
   factor = {
     x: random(processFactor.min, processFactor.max),
     y: random(processFactor.min, processFactor.max),
   },
-): Promise<string> =>
+) =>
   new Promise((resolve, reject): void => {
     let processedImg: string;
 

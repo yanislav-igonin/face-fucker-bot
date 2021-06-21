@@ -1,7 +1,7 @@
-import { TextContextMessageUpdate } from './TextContextMessageUpdate';
-import { UserContextMessageUpdate } from './UserContextMessageUpdate';
+import { TextContext } from './TextContext';
+import { UserContext } from './UserContext';
 
 export {
-  TextContextMessageUpdate,
-  UserContextMessageUpdate,
+  TextContext,
+  UserContext,
 };

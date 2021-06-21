@@ -1,13 +1,7 @@
-interface ProcessFactorConfig {
-  min: number;
-  max: number;
-  shift: number;
-}
-
-const processFactor: ProcessFactorConfig = {
+const processFactor = {
   min: 35,
   max: 65,
   shift: 2,
 };
 
-export default processFactor;
+export { processFactor };

@@ -41,4 +41,4 @@ const locale: LocaleData = {
   },
 };
 
-export default locale;
+export { locale as ru };

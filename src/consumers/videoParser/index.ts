@@ -1,4 +1,4 @@
-import parseVideo from './parseVideo';
+import { parseVideo } from './parseVideo';
 import { localizator, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';
 
@@ -9,9 +9,9 @@ interface VideoParserData {
   messageId: number;
 }
 
-export default async ({
+export const videoParser = async ({
   user, messageId, sourceVideoFile, type,
-}: VideoParserData): Promise<void> => {
+}: VideoParserData) => {
   try {
     const parsedImageFiles = await parseVideo(sourceVideoFile);
 

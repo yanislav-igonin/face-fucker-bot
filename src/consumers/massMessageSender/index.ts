@@ -10,11 +10,11 @@ interface MassMessageSenderData {
   extra: ExtraData;
 }
 
-export default async ({
+export const massMessageSender = async ({
   user,
   message,
   extra,
-}: MassMessageSenderData): Promise<void> => {
+}: MassMessageSenderData) => {
   try {
     await delay(app.massMessageSenderDelay);
     // TODO: add parse_mode param from extra or message
@@ -22,10 +22,7 @@ export default async ({
 
     if (extra.stickers !== undefined) {
       const sendingStickers = extra.stickers.map(
-        (sticker): Promise<any> => telegram.sendSticker(
-          user.id,
-          sticker,
-        ),
+        (sticker) => telegram.sendSticker(user.id, sticker),
       );
 
       await Promise.all(sendingStickers);

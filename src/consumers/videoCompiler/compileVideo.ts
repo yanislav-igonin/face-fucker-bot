@@ -1,9 +1,9 @@
 import { spawn } from 'child_process';
-import path from 'path';
+import * as path from 'path';
 
 import { folders } from '../../config';
 
-export default (sourceVideoFile: string): Promise<string> =>
+export const compileVideo = (sourceVideoFile: string): Promise<string> =>
   new Promise((resolve, reject): void => {
     const processedVideoFramesName = path.join(
       folders.videoProcessedFrames,

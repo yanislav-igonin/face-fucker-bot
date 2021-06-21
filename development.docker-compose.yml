@@ -1,35 +1,38 @@
 version: '3.7'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: development.Dockerfile
-    environment:
-      - NODE_ENV=development
-      - BOT_TOKEN=${BOT_TOKEN}
-      - RABBIT_URL=amqp://rabbitmq
-      - SENTRY_DSN=${SENTRY_DSN}
-      - POSTGRES_URL=postgres://face_fucker:123456@postgres/face_fucker_bot
-      - DATABASE_LOG=false
-      - DATABASE_SYNC=true
-      - WEBHOOK_HOST=${WEBHOOK_HOST}
-      - WEBHOOK_PORT=${WEBHOOK_PORT}
-      - WEBHOOK_PATH=${WEBHOOK_PATH}
-      - IS_WEBHOOK_DISABLED=${IS_WEBHOOK_DISABLED}
-    depends_on:
-      - rabbitmq
-    volumes:
-      - ./src:/usr/src/app/src
-      - ./uploads:/usr/src/app/uploads
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: development.Dockerfile
+  #   environment:
+  #     - NODE_ENV=development
+  #     - BOT_TOKEN=${BOT_TOKEN}
+  #     - RABBIT_URL=amqp://rabbitmq
+  #     - SENTRY_DSN=${SENTRY_DSN}
+  #     - POSTGRES_URL=postgres://face_fucker:123456@postgres/face_fucker_bot
+  #     - DATABASE_LOG=false
+  #     - DATABASE_SYNC=true
+  #     - WEBHOOK_HOST=${WEBHOOK_HOST}
+  #     - WEBHOOK_PORT=${WEBHOOK_PORT}
+  #     - WEBHOOK_PATH=${WEBHOOK_PATH}
+  #     - IS_WEBHOOK_DISABLED=${IS_WEBHOOK_DISABLED}
+  #   depends_on:
+  #     - rabbitmq
+  #   volumes:
+  #     - ./src:/usr/src/app/src
+  #     - ./uploads:/usr/src/app/uploads
 
   rabbitmq:
     image: rabbitmq:management-alpine
     ports:
+      - 5672:5672
       - 15672:15672
 
   postgres:
     image: postgres:latest
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=face_fucker
       - POSTGRES_PASSWORD=123456

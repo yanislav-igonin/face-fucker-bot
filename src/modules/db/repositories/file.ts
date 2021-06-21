@@ -1,4 +1,4 @@
-import db from '..';
+import { db } from '..';
 import { File, User } from '../entities';
 
 interface FileData {
@@ -7,7 +7,7 @@ interface FileData {
   user: User;
 }
 
-export const createFile = async (data: FileData): Promise<File> => {
+export const createFile = async (data: FileData) => {
   const fileRepository = db.getRepository(File);
   const file = new File();
   file.type = data.type;
