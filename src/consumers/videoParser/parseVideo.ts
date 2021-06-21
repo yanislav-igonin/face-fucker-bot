@@ -24,13 +24,13 @@ export const parseVideo = async (file: string): Promise<string[]> =>
       `${videoFramesName}-frame-%04d.jpg`,
     ]);
 
-    videoConverterToImages.on('error', (err: Error): void => reject(err));
+    videoConverterToImages.on('error', (err) => reject(err));
 
-    videoConverterToImages.on('exit', async (): Promise<void> => {
+    videoConverterToImages.on('exit', async () => {
       const parsedFiles = await files
         .readDirByPattern(folders.videoSourceFrames, path.basename(file, '.mp4'));
 
-      const parsedFilesFullPaths = parsedFiles.map((parsedFile): string =>
+      const parsedFilesFullPaths = parsedFiles.map((parsedFile) =>
         path.join(folders.videoSourceFrames, parsedFile));
 
       return resolve(parsedFilesFullPaths);

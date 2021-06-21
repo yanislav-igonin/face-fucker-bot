@@ -8,13 +8,13 @@ import { fileType } from '../config';
 const cutUrlsFromText = (
   urlEntities: MessageEntity[],
   text: string,
-) => urlEntities
-  .reduce((acc: string[], { offset, length }): string[] => {
-    const url = text.substring(offset, offset + length);
-    acc.push(url);
+) => urlEntities.reduce<string[]>((acc, entity) => {
+  const { offset, length } = entity;
+  const url = text.substring(offset, offset + length);
+  acc.push(url);
 
-    return acc;
-  }, []);
+  return acc;
+}, []);
 
 export const text = async (ctx: TextContext) => {
   if (ctx.update.message.text.includes('rick')) {

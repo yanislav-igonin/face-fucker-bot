@@ -1,9 +1,7 @@
+import { Middleware } from 'telegraf';
 import { UserContext } from '../modules/telegram/interfaces';
 
-export const auth = async (
-  ctx: UserContext,
-  next: (() => Promise<void>) | undefined,
-) => {
+export const auth: Middleware<UserContext> = async (ctx, next) => {
   if (ctx.update.message.from.id !== 142166671) return;
   if (next !== undefined) await next();
 };

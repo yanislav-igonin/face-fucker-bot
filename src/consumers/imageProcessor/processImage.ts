@@ -12,7 +12,7 @@ export const processImage = (
     x: random(processFactor.min, processFactor.max),
     y: random(processFactor.min, processFactor.max),
   },
-): Promise<string> =>
+) =>
   new Promise((resolve, reject): void => {
     let processedImg: string;
 
