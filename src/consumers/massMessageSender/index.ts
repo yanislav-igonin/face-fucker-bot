@@ -16,7 +16,7 @@ export const massMessageSender = async ({
   extra,
 }: MassMessageSenderData) => {
   try {
-    await delay(app.massMessageSenderDelay);
+    await delay(app.messageSender.delay);
     // TODO: add parse_mode param from extra or message
     await telegram.sendMessage(user.id, message, { parse_mode: 'HTML' });
 

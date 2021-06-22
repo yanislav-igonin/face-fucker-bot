@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { random } from '../../helpers';
 
-import { fileType, folders, processFactor } from '../../config';
+import { fileType, folders, processFactor } from '../../constants';
 
 export const processImage = (
   sourceImg: string,

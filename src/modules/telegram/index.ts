@@ -1,7 +1,7 @@
 import { Telegram } from 'telegraf';
 
-import { app } from '../../config';
+import { telegram as telegramConfig } from '../../config';
 
-const telegram = new Telegram(app.botToken, {});
+const telegram = new Telegram(telegramConfig.token, {});
 
 export { telegram };

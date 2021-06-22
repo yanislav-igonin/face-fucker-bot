@@ -1,8 +1,11 @@
-import { app } from './app';
-import { fileType } from './fileType';
-import { folders } from './folders';
-import { processFactor } from './processFactor';
+import { app } from './app.config';
+import { db } from './db.config';
+import { rabbit } from './rabbit.config';
+import { telegram } from './telegram.config';
 
 export {
-  app, fileType, folders, processFactor,
+  app,
+  db,
+  rabbit,
+  telegram,
 };

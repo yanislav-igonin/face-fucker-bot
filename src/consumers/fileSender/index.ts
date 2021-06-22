@@ -1,6 +1,6 @@
 import { User } from '../../modules/db/entities';
 import { rabbit, telegram, localizator } from '../../modules';
-import { fileType } from '../../config';
+import { fileType } from '../../constants';
 
 interface FileSenderData {
   user: User;

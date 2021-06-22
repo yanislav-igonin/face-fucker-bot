@@ -3,7 +3,7 @@ import * as path from 'path';
 import { logger, rabbit } from '../../modules';
 import { User } from '../../modules/db/entities';
 import { files } from '../../helpers';
-import { fileType, folders } from '../../config';
+import { fileType, folders } from '../../constants';
 
 interface FileCleanerData {
   user: User;

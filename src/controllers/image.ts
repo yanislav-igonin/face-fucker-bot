@@ -2,7 +2,7 @@ import { UserContext } from '../modules/telegram/interfaces';
 import { userRepository } from '../modules/db/repositories';
 import { rabbit, localizator } from '../modules';
 import { User } from '../modules/db/entities';
-import { fileType } from '../config';
+import { fileType } from '../constants';
 import { files } from '../helpers';
 
 export const image = async (ctx: UserContext) => {

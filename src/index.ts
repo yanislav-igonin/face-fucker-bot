@@ -8,7 +8,8 @@ import { auth } from './middlewares';
 import {
   start, image, video, text, execute,
 } from './controllers';
-import { app, folders } from './config';
+import { app, telegram } from './config';
+import { folders } from './constants';
 import { db, rabbit, logger } from './modules';
 
 import {
@@ -24,10 +25,10 @@ import {
 } from './consumers';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-const bot: Telegraf<any> = new Telegraf(app.botToken);
+const bot: Telegraf<any> = new Telegraf(telegram.token);
 
 Sentry.init({
-  dsn: app.sentryDsn,
+  dsn: app.sentry.dsn,
   environment: app.env,
   release: app.release,
 });
@@ -72,22 +73,22 @@ Promise.all([
   await db.connect();
   logger.info('db - connection - success');
 
-  if (app.isWebhookDisabled) {
+  if (telegram.webhook.isEnabled) {
     await bot.telegram.deleteWebhook();
     bot.startPolling();
   } else {
     let host: string;
     if (app.env === 'development') {
-      host = await ngrok.connect(app.webhookPort);
+      host = await ngrok.connect(telegram.webhook.port);
     } else {
-      host = app.webhookHost;
+      host = telegram.webhook.host;
     }
 
     await bot.launch({
       webhook: {
         domain: host,
-        hookPath: app.webhookPath,
-        port: app.webhookPort,
+        hookPath: telegram.webhook.path,
+        port: telegram.webhook.port,
       },
     });
   }

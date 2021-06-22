@@ -64,6 +64,6 @@ export const sendAll = async (subcommand: string) => {
         message: localizedMessage,
         extra,
       });
-    }, app.massMessageSenderDelay * index);
+    }, app.messageSender.delay * index);
   });
 };

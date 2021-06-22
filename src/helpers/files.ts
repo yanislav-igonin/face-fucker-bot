@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import { Message } from 'telegram-typings';
 
-import { fileType, folders } from '../config';
+import { fileType, folders } from '../constants';
 
 const clearFile = (file: string) => fs.unlink(file);
 
