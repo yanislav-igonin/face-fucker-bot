@@ -4,7 +4,14 @@ import { localizator } from './localizator';
 import { logger } from './logger';
 import { rabbit } from './rabbit';
 import { telegram } from './telegram';
+import { BotModule } from './bot/bot.module';
 
 export {
-  db, errors, localizator, logger, rabbit, telegram,
+  db,
+  errors,
+  localizator,
+  logger,
+  rabbit,
+  telegram,
+  BotModule,
 };

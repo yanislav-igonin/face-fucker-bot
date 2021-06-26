@@ -4,6 +4,7 @@ import * as path from 'path';
 import { v4 as uuid } from 'uuid';
 import { File } from 'telegram-typings';
 
+import { URL } from 'url';
 import { telegram, errors, localizator } from '../../modules';
 import { files } from '../../helpers';
 import { fileType } from '../../constants';
@@ -22,7 +23,7 @@ const loadTelegramFile = (
     const folder: string = files.choseFolderForType(type);
 
     let fileInfo: File;
-    let fileLink: string;
+    let fileLink: URL;
 
     try {
       // @ts-ignore // 'getFile' does not exist, bad typings
@@ -61,7 +62,7 @@ const loadTelegramFile = (
 
     try {
       response = await axios({
-        url: fileLink,
+        url: fileLink.href,
         method: 'GET',
         responseType: 'stream',
       });
