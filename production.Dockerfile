@@ -1,11 +1,11 @@
-FROM node:10
+FROM node:14
 
 ENV MAGICK_URL "https://imagemagick.org/download/releases"
-ENV MAGICK_VERSION 6.9.1-10
+ENV MAGICK_VERSION 7.1.0-2
 
 RUN apt update -y \
   && apt install -y --no-install-recommends \
-    libpng-dev libjpeg-dev libtiff-dev liblqr-dev \
+    libpng-dev libjpeg-dev liblqr-dev \
   && apt remove -y imagemagick \
   && cd /tmp \
   && curl -SLO "${MAGICK_URL}/ImageMagick-${MAGICK_VERSION}.tar.xz" \
@@ -16,30 +16,10 @@ RUN apt update -y \
     --disable-static \
     --enable-shared \
     --with-jpeg \
-    --with-jp2 \
     --with-lqr \
-    --with-openjp2 \
     --with-png \
-    --with-tiff \
     --with-webp \
     --with-quantum-depth=8 \
-    --without-magick-plus-plus \
-    --without-bzlib \
-    --without-zlib \
-    --without-dps \
-    --without-fftw \
-    --without-fpx \
-    --without-djvu \
-    --without-fontconfig \
-    --without-freetype \
-    --without-jbig \
-    --without-lcms \
-    --without-lcms2 \
-    --without-lzma \
-    --without-openexr \
-    --without-pango \
-    --without-x \
-    --without-xml \
   && make \
   && make install \
   && ldconfig /usr/local/lib \

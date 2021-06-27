@@ -16,9 +16,9 @@ services:
   #     - WEBHOOK_HOST=${WEBHOOK_HOST}
   #     - WEBHOOK_PORT=${WEBHOOK_PORT}
   #     - WEBHOOK_PATH=${WEBHOOK_PATH}
-  #     - IS_WEBHOOK_DISABLED=${IS_WEBHOOK_DISABLED}
   #   depends_on:
   #     - rabbitmq
+  #     - postgres
   #   volumes:
   #     - ./src:/usr/src/app/src
   #     - ./uploads:/usr/src/app/uploads

@@ -5,7 +5,7 @@ import { User } from '../../db/entities';
 import { fileType } from '../../../constants';
 import { files } from '../../../helpers';
 
-export const ImageController = Composer.on('photo', async (ctx) => {
+export const ImageController = Composer.on(['photo', 'sticker'], async (ctx) => {
   let user: User | undefined;
 
   try {
