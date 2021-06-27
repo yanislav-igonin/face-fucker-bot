@@ -1,5 +1,5 @@
 import { StartController } from './start.controller';
-import { TextController } from './text.controller2';
+import { TextController } from './text.controller';
 
 export {
   StartController,
