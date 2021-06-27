@@ -1,8 +1,8 @@
-import { userRepository } from '../../modules/db/repositories';
-import { rabbit, localizator } from '../../modules';
+import { userRepository } from '../../../db/repositories';
+import { rabbit, localizator } from '../../..';
 import { SEND_ALL_SUBCOMMANDS, SEND_ALL_SUBCOMMANDS_LIST } from './constants';
-import CustomUserError from '../../modules/errors/UserError';
-import { app } from '../../config';
+import CustomUserError from '../../../errors/UserError';
+import { app } from '../../../../config';
 
 export interface ExtraData {
   stickers?: string[];
@@ -64,6 +64,6 @@ export const sendAll = async (subcommand: string) => {
         message: localizedMessage,
         extra,
       });
-    }, app.massMessageSenderDelay * index);
+    }, app.messageSender.delay * index);
   });
 };

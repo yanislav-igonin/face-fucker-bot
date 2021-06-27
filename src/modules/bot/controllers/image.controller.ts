@@ -1,11 +1,11 @@
-import { UserContext } from '../modules/telegram/interfaces';
-import { userRepository } from '../modules/db/repositories';
-import { rabbit, localizator } from '../modules';
-import { User } from '../modules/db/entities';
-import { fileType } from '../config';
-import { files } from '../helpers';
+import { Composer } from 'telegraf';
+import { userRepository } from '../../db/repositories';
+import { rabbit, localizator } from '../..';
+import { User } from '../../db/entities';
+import { fileType } from '../../../constants';
+import { files } from '../../../helpers';
 
-export const image = async (ctx: UserContext) => {
+export const ImageController = Composer.on(['photo', 'sticker'], async (ctx) => {
   let user: User | undefined;
 
   try {
@@ -51,4 +51,4 @@ export const image = async (ctx: UserContext) => {
       },
     });
   }
-};
+});

@@ -1,15 +1,15 @@
 import { getConnectionManager } from 'typeorm';
 
-import { app } from '../../config';
+import { db } from '../../config';
 import { File, User } from './entities';
 
 const connectionManager = getConnectionManager();
 const connection = connectionManager.create({
   type: 'postgres',
-  url: app.dbUrl,
+  url: db.url,
   entities: [File, User],
-  logging: app.dbLog,
-  synchronize: app.dbSync,
+  logging: db.isLogged,
+  synchronize: db.isSynced,
   extra: {
     max: 5,
   },

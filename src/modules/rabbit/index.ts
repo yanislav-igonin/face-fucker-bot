@@ -1,6 +1,6 @@
 import * as amqplib from 'amqplib';
 
-import { app } from '../../config';
+import { rabbit as rabbitConfig } from '../../config';
 import { logger } from '../logger';
 
 class RabbitConnection {
@@ -97,6 +97,6 @@ class RabbitConnection {
   }
 }
 
-const rabbit = new RabbitConnection(app.rabbitUrl);
+const rabbit = new RabbitConnection(rabbitConfig.url);
 
 export { rabbit };

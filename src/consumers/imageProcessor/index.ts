@@ -3,7 +3,7 @@ import * as path from 'path';
 import { User } from '../../modules/db/entities';
 import { processImage } from './processImage';
 import { localizator, rabbit } from '../../modules';
-import { fileType, processFactor, folders } from '../../config';
+import { fileType, processFactor, folders } from '../../constants';
 import { random, files } from '../../helpers';
 
 const liquifyVideoFactorCache = new Map();

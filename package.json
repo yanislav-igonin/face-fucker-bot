@@ -23,7 +23,7 @@
     "pino": "^5.17.0",
     "pino-pretty": "^3.6.1",
     "reflect-metadata": "^0.1.13",
-    "telegraf": "^3.38.0",
+    "telegraf": "^4.3.0",
     "typeorm": "^0.2.34",
     "uuid": "^8.3.1"
   },
@@ -44,7 +44,7 @@
     "nodemon": "^1.19.4",
     "telegram-typings": "^4.0.0-beta",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "typescript": "^4.3.4"
   },
   "husky": {
     "hooks": {

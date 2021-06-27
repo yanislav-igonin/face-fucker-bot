@@ -2,7 +2,7 @@ import { rabbit, telegram, logger } from '../../modules';
 import { delay } from '../../helpers';
 import { app } from '../../config';
 import { User } from '../../modules/db/entities';
-import { ExtraData } from '../../controllers/execute/sendAll';
+import { ExtraData } from '../../modules/bot/controllers/execute/sendAll';
 
 interface MassMessageSenderData {
   user: User;
@@ -16,7 +16,7 @@ export const massMessageSender = async ({
   extra,
 }: MassMessageSenderData) => {
   try {
-    await delay(app.massMessageSenderDelay);
+    await delay(app.messageSender.delay);
     // TODO: add parse_mode param from extra or message
     await telegram.sendMessage(user.id, message, { parse_mode: 'HTML' });
 

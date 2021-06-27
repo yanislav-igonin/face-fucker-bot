@@ -1,9 +1,9 @@
+import { Composer } from 'telegraf';
 import { MessageEntity } from 'telegram-typings';
-import { TextContext } from '../modules/telegram/interfaces';
-import { User } from '../modules/db/entities';
-import { userRepository } from '../modules/db/repositories';
-import { localizator, rabbit } from '../modules';
-import { fileType } from '../config';
+import { User } from '../../db/entities';
+import { userRepository } from '../../db/repositories';
+import { localizator, rabbit } from '../..';
+import { fileType } from '../../../constants';
 
 const cutUrlsFromText = (
   urlEntities: MessageEntity[],
@@ -16,7 +16,7 @@ const cutUrlsFromText = (
   return acc;
 }, []);
 
-export const text = async (ctx: TextContext) => {
+export const TextController = Composer.on('text', async (ctx) => {
   if (ctx.update.message.text.includes('rick')) {
     ctx.reply('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
   }
@@ -63,4 +63,4 @@ export const text = async (ctx: TextContext) => {
       },
     });
   }
-};
+});

@@ -1,15 +1,11 @@
 import 'reflect-metadata';
-import Telegraf from 'telegraf';
 import * as fs from 'fs-extra';
 import * as Sentry from '@sentry/node';
-import * as ngrok from 'ngrok';
-
-import { auth } from './middlewares';
+import { app, telegram } from './config';
+import { folders } from './constants';
 import {
-  start, image, video, text, execute,
-} from './controllers';
-import { app, folders } from './config';
-import { db, rabbit, logger } from './modules';
+  db, rabbit, logger, BotModule,
+} from './modules';
 
 import {
   errorHandler,
@@ -23,37 +19,22 @@ import {
   massMessageSender,
 } from './consumers';
 
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-const bot: Telegraf<any> = new Telegraf(app.botToken);
-
 Sentry.init({
-  dsn: app.sentryDsn,
+  dsn: app.sentry.dsn,
   environment: app.env,
   release: app.release,
 });
 
-bot.catch((err: Error) => {
-  logger.error(err);
-  throw err;
-});
+const launch = async () => {
+  await Promise.all([
+    fs.ensureDir(folders.imageProcessed),
+    fs.ensureDir(folders.imageUploads),
+    fs.ensureDir(folders.videoUploads),
+    fs.ensureDir(folders.videoProcessed),
+    fs.ensureDir(folders.videoSourceFrames),
+    fs.ensureDir(folders.videoProcessedFrames),
+  ]);
 
-bot.start(start);
-bot.command('execute', auth, execute);
-bot.on('photo', image);
-bot.on('sticker', image);
-bot.on('animation', video);
-bot.on('video', video);
-bot.on('video_note', video);
-bot.on('text', text);
-
-Promise.all([
-  fs.ensureDir(folders.imageProcessed),
-  fs.ensureDir(folders.imageUploads),
-  fs.ensureDir(folders.videoUploads),
-  fs.ensureDir(folders.videoProcessed),
-  fs.ensureDir(folders.videoSourceFrames),
-  fs.ensureDir(folders.videoProcessedFrames),
-]).then(async () => {
   logger.info(`release - ${app.release}`);
   await rabbit.connect();
   logger.info('rabbitmq - connection - success');
@@ -72,29 +53,10 @@ Promise.all([
   await db.connect();
   logger.info('db - connection - success');
 
-  if (app.isWebhookDisabled) {
-    await bot.telegram.deleteWebhook();
-    bot.startPolling();
-  } else {
-    let host: string;
-    if (app.env === 'development') {
-      host = await ngrok.connect(app.webhookPort);
-    } else {
-      host = app.webhookHost;
-    }
+  const bot = new BotModule({ app, telegram });
+  await bot.launch();
+};
 
-    await bot.launch({
-      webhook: {
-        domain: host,
-        hookPath: app.webhookPath,
-        port: app.webhookPort,
-      },
-    });
-  }
-
-  logger.info('bot - online');
-  logger.info('all systems nominal');
-}).catch((err: Error) => {
-  logger.error('bot - offline');
-  logger.error(err);
-});
+launch()
+  .then(() => logger.info('all systems nominal'))
+  .catch((err) => logger.error(err));

@@ -8,7 +8,7 @@ import {
   LoadFileResult,
 } from './load';
 
-import { fileType } from '../../config';
+import { fileType } from '../../constants';
 
 interface FileLoaderData {
   user: User;
