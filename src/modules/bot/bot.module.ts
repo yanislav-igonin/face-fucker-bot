@@ -3,7 +3,12 @@ import * as ngrok from 'ngrok';
 
 import { Config } from '../../config/config.interface';
 import { logger } from '../logger';
-import { ImageController, StartController, TextController } from './controllers';
+import {
+  ImageController,
+  StartController,
+  TextController,
+  VideoController,
+} from './controllers';
 // import { metrics } from '../../common/utils';
 
 export class BotModule {
@@ -28,6 +33,10 @@ export class BotModule {
     this.bot.start(StartController);
     this.bot.on('text', TextController);
     this.bot.on('photo', ImageController);
+    this.bot.on('sticker', ImageController);
+    this.bot.on('animation', VideoController);
+    this.bot.on('video', VideoController);
+    this.bot.on('video_note', VideoController);
   }
 
   get telegraf() {

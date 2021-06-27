@@ -1,10 +1,10 @@
-import { UserContext } from '../modules/telegram/interfaces';
-import { User } from '../modules/db/entities';
-import { userRepository } from '../modules/db/repositories';
-import { localizator, rabbit, telegram } from '../modules';
-import { files } from '../helpers';
+import { UserContext } from '../../telegram/interfaces';
+import { User } from '../../db/entities';
+import { userRepository } from '../../db/repositories';
+import { localizator, rabbit, telegram } from '../..';
+import { files } from '../../../helpers';
 
-export const video = async (ctx: UserContext) => {
+export const VideoController = async (ctx: UserContext) => {
   let user: User | undefined;
 
   try {
