@@ -1,11 +1,11 @@
-import { UserContext } from '../../telegram/interfaces';
+import { Composer } from 'telegraf';
 import { userRepository } from '../../db/repositories';
 import { rabbit, localizator } from '../..';
 import { User } from '../../db/entities';
 import { fileType } from '../../../constants';
 import { files } from '../../../helpers';
 
-export const ImageController = async (ctx: UserContext) => {
+export const ImageController = Composer.on('photo', async (ctx) => {
   let user: User | undefined;
 
   try {
@@ -51,4 +51,4 @@ export const ImageController = async (ctx: UserContext) => {
       },
     });
   }
-};
+});

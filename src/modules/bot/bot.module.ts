@@ -8,7 +8,10 @@ import {
   StartController,
   TextController,
   VideoController,
+  ExecuteController,
 } from './controllers';
+import { AuthMiddleware } from './middlewares';
+
 // import { metrics } from '../../common/utils';
 
 export class BotModule {
@@ -31,6 +34,7 @@ export class BotModule {
     });
 
     this.bot.start(StartController);
+    this.bot.command('execute', AuthMiddleware, ExecuteController);
     this.bot.on('text', TextController);
     this.bot.on('photo', ImageController);
     this.bot.on('sticker', ImageController);

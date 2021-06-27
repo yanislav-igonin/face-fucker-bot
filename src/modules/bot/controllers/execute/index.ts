@@ -1,10 +1,10 @@
+import { Composer } from 'telegraf';
 import { sendAll } from './sendAll';
-import { TextContext } from '../../modules/telegram/interfaces';
-import { rabbit } from '../../modules';
+import { rabbit } from '../../..';
 import { COMMANDS, COMMANDS_LIST } from './constants';
-import CustomUserError from '../../modules/errors/UserError';
+import CustomUserError from '../../../errors/UserError';
 
-export const execute = async (ctx: TextContext) => {
+export const ExecuteController = Composer.on('text', async (ctx) => {
   try {
     const [, command, subcommand] = ctx.update.message.text.split(' ');
 
@@ -29,4 +29,4 @@ export const execute = async (ctx: TextContext) => {
       },
     });
   }
-};
+});
