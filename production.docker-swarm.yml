@@ -16,8 +16,8 @@ services:
       - WEBHOOK_HOST=${WEBHOOK_HOST}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
       - WEBHOOK_PATH=${WEBHOOK_PATH}
-      - API_TOKEN={API_TOKEN}
-      - METRICS_PATH={METRICS_PATH}
+      - API_TOKEN=${API_TOKEN}
+      - METRICS_PATH=${METRICS_PATH}
     volumes:
       - /root/bots/face-fucker-bot/uploads:/usr/src/app/uploads
     deploy:
