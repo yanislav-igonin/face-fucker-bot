@@ -7,6 +7,7 @@ export interface AppConfig {
   messageSender: {
     delay: number;
   };
+  apiToken: string;
 }
 
 export interface TelegramConfig {
