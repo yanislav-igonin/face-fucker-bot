@@ -5,6 +5,7 @@ import { logger } from './logger';
 import { rabbit } from './rabbit';
 import { telegram } from './telegram';
 import { BotModule } from './bot/bot.module';
+import { ApiModule } from './api/api.module';
 
 export {
   db,
@@ -14,4 +15,5 @@ export {
   rabbit,
   telegram,
   BotModule,
+  ApiModule,
 };

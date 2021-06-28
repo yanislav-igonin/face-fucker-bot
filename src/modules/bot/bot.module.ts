@@ -61,7 +61,6 @@ export class BotModule {
     await this.bot.telegram.deleteWebhook();
     const url = `${host}${telegram.webhook.path}`;
     await this.bot.telegram.setWebhook(url);
-    await this.bot.launch();
     logger.info('bot - online');
   }
 }
