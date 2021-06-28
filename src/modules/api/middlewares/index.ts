@@ -1,7 +1,7 @@
 import * as koaBody from 'koa-body';
 import * as helmet from 'koa-helmet';
 
-// import { metrics } from '../../../common/utils';
+import { metrics } from '../../../common/utils';
 import { auth } from './auth';
 import { errorHandler } from './errorHandler';
 
@@ -12,5 +12,5 @@ export const middlewares = [
   helmet(),
   errorHandler,
   auth,
-  // metrics.middleware,
+  metrics.middleware,
 ];

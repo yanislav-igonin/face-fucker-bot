@@ -1,5 +1,6 @@
 import { User } from '../../modules/db/entities';
 import { localizator, logger, telegram } from '../../modules';
+import { metrics } from '../../common/utils';
 
 interface ErrorEntity {
   message: string;
@@ -13,6 +14,7 @@ interface ErrorHandlerData {
 }
 
 export const errorHandler = async ({ err, user }: ErrorHandlerData) => {
+  metrics.error();
   try {
     if (user === undefined) {
       // Logging previous error to know original error cause.
