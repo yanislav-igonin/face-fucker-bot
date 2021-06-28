@@ -1,6 +1,6 @@
 import * as amqplib from 'amqplib';
 
-import { rabbit as rabbitConfig } from '../../config';
+import { rabbit as rabbitConfig } from '../../common/config';
 import { logger } from '../logger';
 
 class RabbitConnection {

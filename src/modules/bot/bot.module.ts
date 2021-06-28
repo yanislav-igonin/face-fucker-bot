@@ -1,7 +1,7 @@
 import { Telegraf, Context } from 'telegraf';
 import * as ngrok from 'ngrok';
 
-import { Config } from '../../config/config.interface';
+import { Config } from '../../common/config/config.interface';
 import { logger } from '../logger';
 import {
   ImageController,
@@ -10,9 +10,12 @@ import {
   VideoController,
   ExecuteController,
 } from './controllers';
-import { AuthMiddleware } from './middlewares';
+import {
+  AuthMiddleware,
+  MetricsMiddleware,
+} from './middlewares';
 
-// import { metrics } from '../../common/utils';
+import { metrics } from '../../common/utils';
 
 export class BotModule {
   private config: Pick<Config, 'app' | 'telegram'>;
@@ -23,15 +26,11 @@ export class BotModule {
     this.bot = new Telegraf(config.telegram.token);
 
     this.bot.catch((err) => {
-      // metrics.error();
+      metrics.error();
       logger.error(`ERROR: ${err}\n`);
     });
 
-    // TODO: move to middlewares
-    this.bot.use(async (_, next) => {
-      // metrics.request();
-      await next();
-    });
+    this.bot.use(MetricsMiddleware);
 
     this.bot.start(StartController);
     this.bot.command('execute', AuthMiddleware, ExecuteController);
@@ -61,7 +60,6 @@ export class BotModule {
     await this.bot.telegram.deleteWebhook();
     const url = `${host}${telegram.webhook.path}`;
     await this.bot.telegram.setWebhook(url);
-    await this.bot.launch();
     logger.info('bot - online');
   }
 }

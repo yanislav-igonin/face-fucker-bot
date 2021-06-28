@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import * as fs from 'fs-extra';
 import * as Sentry from '@sentry/node';
-import { app, telegram } from './config';
+import { app, telegram } from './common/config';
 import { folders } from './constants';
 import {
-  db, rabbit, logger, BotModule,
+  db, rabbit, logger, BotModule, ApiModule,
 } from './modules';
 
 import {
@@ -54,7 +54,8 @@ const launch = async () => {
   logger.info('db - connection - success');
 
   const bot = new BotModule({ app, telegram });
-  await bot.launch();
+  const api = new ApiModule({ app, telegram }, bot);
+  await api.launch();
 };
 
 launch()

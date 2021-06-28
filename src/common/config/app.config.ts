@@ -11,6 +11,11 @@ const appConfig: AppConfig = {
       ? parseInt(process.env.MASS_MESSAGE_SENDER_DELAY, 10)
       : 1000,
   },
+  apiToken: process.env.API_TOKEN || 'secret',
+  metrics: {
+    appName: process.env.APP_NAME || 'face-fucker-bot',
+    path: process.env.METRICS_PATH || '/metrics',
+  },
 };
 
 export { appConfig as app };
