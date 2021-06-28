@@ -1,6 +1,6 @@
 import { Middleware } from 'koa';
 import * as client from 'prom-client';
-import { app } from '../../config';
+import { app } from '../config';
 
 interface MetricsOptions {
   appName: string;

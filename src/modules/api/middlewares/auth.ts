@@ -1,5 +1,5 @@
 import { Middleware } from 'koa';
-import * as config from '../../../config';
+import * as config from '../../../common/config';
 import { UnauthorizedError, ForbiddenError } from '../errors';
 
 export const auth: Middleware = async (ctx, next) => {

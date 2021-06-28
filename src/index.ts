@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import * as fs from 'fs-extra';
 import * as Sentry from '@sentry/node';
-import { app, telegram } from './config';
+import { app, telegram } from './common/config';
 import { folders } from './constants';
 import {
   db, rabbit, logger, BotModule, ApiModule,

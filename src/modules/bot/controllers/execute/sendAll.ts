@@ -2,7 +2,7 @@ import { userRepository } from '../../../db/repositories';
 import { rabbit, localizator } from '../../..';
 import { SEND_ALL_SUBCOMMANDS, SEND_ALL_SUBCOMMANDS_LIST } from './constants';
 import CustomUserError from '../../../errors/UserError';
-import { app } from '../../../../config';
+import { app } from '../../../../common/config';
 
 export interface ExtraData {
   stickers?: string[];

@@ -1,7 +1,7 @@
 import * as Koa from 'koa';
 import { BotModule } from '..';
 
-import { Config } from '../../config/config.interface';
+import { Config } from '../../common/config/config.interface';
 import { logger } from '../logger';
 import { middlewares, botHandler } from './middlewares';
 

@@ -1,6 +1,6 @@
 import { Middleware } from 'koa';
 import { BotModule } from '../../bot/bot.module';
-import { Config } from '../../../config/config.interface';
+import { Config } from '../../../common/config/config.interface';
 
 export const botHandler = (
   bot: BotModule,

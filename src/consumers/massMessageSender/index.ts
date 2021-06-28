@@ -1,6 +1,6 @@
 import { rabbit, telegram, logger } from '../../modules';
 import { delay } from '../../helpers';
-import { app } from '../../config';
+import { app } from '../../common/config';
 import { User } from '../../modules/db/entities';
 import { ExtraData } from '../../modules/bot/controllers/execute/sendAll';
 
