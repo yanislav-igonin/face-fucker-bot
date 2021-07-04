@@ -15,7 +15,9 @@ npm run start:dev
 ```
 
 ### Production
-`BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... WEBHOOK_HOST=... WEBHOOK_PORT=... WEBHOOK_PATH=... docker stack deploy -c production.docker-swarm.yml face-fucker-bot`
+```bash
+BOT_TOKEN=... RABBIT_URL=... SENTRY_DSN=... POSTGRES_URL=... WEBHOOK_HOST=... WEBHOOK_PORT=... WEBHOOK_PATH=... docker stack deploy -c production.docker-swarm.yml face-fucker-bot
+```
 
 ### Webhook info
 Telegram can't use subdomain like `example.example.com`, so you need to use something like `example.com/bots/...` for your webhook.
