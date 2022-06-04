@@ -21,7 +21,8 @@ class RabbitConnection {
       );
     } catch (err) {
       logger.error('RabbitMQ: Connection error');
-      return this.connect();
+      process.exit(1); // to exit from container, docker will restart it
+      // return this.connect();
     }
 
     this.connection.on('error', async () => {
@@ -30,14 +31,16 @@ class RabbitConnection {
       }
 
       logger.error('RabbitMQ: Connection error');
-      this.connection = null;
-      return this.connect();
+      process.exit(1); // to exit from container, docker will restart it
+      // this.connection = null;
+      // return this.connect();
     });
 
     this.connection.on('close', () => {
       logger.error('RabbitMQ: Connection close');
-      this.connection = null;
-      return this.connect();
+      process.exit(1); // to exit from container, docker will restart it
+      // this.connection = null;
+      // return this.connect();
     });
   }
 
