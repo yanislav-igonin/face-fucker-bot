@@ -3,8 +3,8 @@ version: '3.7'
 services:
   app:
     image: ghcr.io/yanislav-igonin/face-fucker-bot/face-fucker-bot:latest
-    networks:
-      - web
+    # networks:
+    #   - web
     environment: 
       - NODE_ENV=production
       - BOT_TOKEN=${BOT_TOKEN}
@@ -48,7 +48,7 @@ services:
         traefik.http.routers.face-fucker-bot-secure.tls: "true"
         traefik.http.routers.face-fucker-bot-secure.service: "face-fucker-bot"
 
-networks:
-  web:
-    driver: overlay
-    external: true
+# networks:
+#   web:
+#     driver: overlay
+#     external: true
