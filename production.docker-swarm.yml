@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   app:
-    image: docker.pkg.github.com/yanislav-igonin/face-fucker-bot/face-fucker-bot:latest
+    image: ghcr.io/yanislav-igonin/face-fucker-bot/face-fucker-bot:latest
     networks:
       - web
     environment: 
