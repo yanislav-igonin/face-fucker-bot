@@ -3,6 +3,8 @@ version: '3.7'
 services:
   app:
     image: ghcr.io/yanislav-igonin/face-fucker-bot/face-fucker-bot:latest
+    container_name: "face-fucker-bot"
+    restart: unless-stopped
     # networks:
     #   - web
     environment: 
