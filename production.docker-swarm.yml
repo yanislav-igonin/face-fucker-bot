@@ -18,6 +18,7 @@ services:
       - WEBHOOK_HOST=${WEBHOOK_HOST}
       - WEBHOOK_PORT=${WEBHOOK_PORT}
       - WEBHOOK_PATH=${WEBHOOK_PATH}
+      - IS_WEBHOOK_DISABLED=true
       - API_TOKEN=${API_TOKEN}
       - METRICS_PATH=${METRICS_PATH}
     volumes:
